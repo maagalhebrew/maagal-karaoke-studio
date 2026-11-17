@@ -182,7 +182,7 @@ word, so the model never returns text:
 
 **Personal data out**
 - New Settings screen, "About you": name, channel name, contact. The permission request drafts use these. Remove from the code and tests:
-  - the owner's name, city and phone number in `permissions.py` (`DRAFT`);
+  - the owner's name and phone number in `permissions.py` (`DRAFT`);
   - the same text in `tests/test_permissions.py`.
 - CLAUDE.md, the `skills\` folder and `tests\m0_check.py` stay out of the shipped app (they are developer files). `m0_check` stops asserting the RTX 3050.
 - `data/translate.json`: remove the personal `_note`. New installs start with empty data: no overrides, no songs, no database.

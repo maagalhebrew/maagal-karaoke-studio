@@ -11,7 +11,7 @@ from datetime import datetime
 import numpy as np
 from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import importer, learning, library, lineedit, paths, permissions, stages, suggest, translate, wordedit
@@ -25,6 +25,32 @@ PEAKS_SAMPLE_RATE = 8000
 
 _write_lock = threading.Lock()
 app = FastAPI(title="Karaoke Studio")
+
+# The server listens on this computer only, but every web page open in the browser is on this computer too.
+# Two checks keep other sites out:
+# - Host: a request must be addressed to 127.0.0.1 or localhost. A site that points its own domain at 127.0.0.1
+#   ("DNS rebinding") sends its domain as the Host, so it can't read the songs or lyrics.
+# - Origin: a page on another site can still make the browser send a request here (it just can't read the
+#   answer), so anything that changes something must come from the studio's own pages. Browsers add an Origin
+#   header to such requests; the CLI and scripts send none and are allowed.
+ALLOWED_HOSTS = {"127.0.0.1", "localhost"}
+SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
+
+
+def _hostname(value: str) -> str:
+    """'localhost:5180' -> 'localhost'; 'http://127.0.0.1:8321' -> '127.0.0.1'."""
+    value = value.split("://", 1)[-1].split("/", 1)[0]
+    return value.rsplit(":", 1)[0].lower() if value.count(":") == 1 else value.lower()
+
+
+@app.middleware("http")
+async def only_this_computer(request: Request, call_next):
+    if _hostname(request.headers.get("host", "")) not in ALLOWED_HOSTS:
+        return PlainTextResponse("Unknown host: open the studio at http://127.0.0.1:8321", status_code=400)
+    origin = request.headers.get("origin")
+    if request.method not in SAFE_METHODS and origin is not None and _hostname(origin) not in ALLOWED_HOSTS:
+        return PlainTextResponse("Changes can only come from the studio's own pages", status_code=403)
+    return await call_next(request)
 
 
 @app.middleware("http")
