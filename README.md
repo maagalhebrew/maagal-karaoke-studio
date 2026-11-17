@@ -1,5 +1,7 @@
 # Maagal Karaoke Studio
 
+This is a free tool by Aaron Gawronsky, creator of www.MaagalHebrew.com
+
 A local Windows app that turns a Hebrew or Spanish song into an editable lesson. It separates the voice from the
 music, times every word to the singing, adds English, and gives you a Studio editor, Practice mode, drills
 and lesson-video export. Everything runs on your own computer: songs and lyrics never leave it.
