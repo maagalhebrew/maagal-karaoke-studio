@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://karaoke.local/song.schema.json",
+  "title": "Karaoke Studio song",
+  "type": "object",
+  "required": ["schema", "song", "lines", "sections", "clips", "drills"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": 2},
+    "song": {
+      "type": "object",
+      "required": ["id", "title", "artist", "language", "permissionId", "audio", "durationMs"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "title": {"type": "string"},
+        "artist": {"type": "string"},
+        "language": {"enum": ["he", "es"]},
+        "permissionId": {"type": ["integer", "null"]},
+        "audio": {
+          "type": "object",
+          "required": ["original", "vocals", "instrumental"],
+          "additionalProperties": false,
+          "properties": {
+            "original": {"type": "string"},
+            "vocals": {"type": "string"},
+            "instrumental": {"type": "string"}
+          }
+        },
+        "durationMs": {"type": "integer", "minimum": 1}
+      }
+    },
+    "lines": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "english", "words"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"$ref": "#/$defs/lineId"},
+          "english": {"type": "string"},
+          "words": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/word"}}
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "label", "fromLine", "toLine"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^S[0-9]+$"},
+          "kind": {"enum": ["verse", "chorus", "bridge", "intro", "outro", "transition", "custom"]},
+          "label": {"type": "string"},
+          "fromLine": {"$ref": "#/$defs/lineId"},
+          "toLine": {"$ref": "#/$defs/lineId"},
+          "color": {"type": "string", "pattern": "^#[0-9a-fA-F]{6}$"}
+        }
+      }
+    },
+    "clips": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "fromWord", "toWord", "padBeforeMs", "padAfterMs"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^C[0-9]+$"},
+          "name": {"type": "string"},
+          "fromWord": {"$ref": "#/$defs/wordId"},
+          "toWord": {"$ref": "#/$defs/wordId"},
+          "padBeforeMs": {"type": "integer", "minimum": 0},
+          "padAfterMs": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "drills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "steps"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^D[0-9]+$"},
+          "name": {"type": "string"},
+          "steps": {"type": "array", "items": {"oneOf": [
+            {
+              "type": "object",
+              "required": ["type", "clip", "repeats", "speed", "track", "yourTurn", "tiers"],
+              "additionalProperties": false,
+              "properties": {
+                "type": {"const": "clip"},
+                "clip": {"type": "string", "pattern": "^C[0-9]+$"},
+                "repeats": {"type": "integer", "minimum": 1, "maximum": 10},
+                "speed": {"type": "number", "minimum": 0.5, "maximum": 1},
+                "track": {"enum": ["original", "instrumental", "vocals"]},
+                "yourTurn": {"type": "boolean"},
+                "tiers": {"type": "array", "uniqueItems": true, "items": {"enum": ["lyrics", "en"]}}
+              }
+            },
+            {
+              "type": "object",
+              "required": ["type", "text", "durationMs"],
+              "additionalProperties": false,
+              "properties": {
+                "type": {"const": "card"},
+                "text": {"type": "string"},
+                "durationMs": {"type": "integer", "minimum": 1}
+              }
+            }
+          ]}}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "lineId": {"type": "string", "pattern": "^L[0-9]+$"},
+    "wordId": {"type": "string", "pattern": "^L[0-9]+W[0-9]+$"},
+    "word": {
+      "type": "object",
+      "required": ["id", "plain", "startMs", "endMs", "confidence", "flags"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/wordId"},
+        "plain": {"type": "string", "minLength": 1},
+        "startMs": {"type": "integer", "minimum": 0},
+        "endMs": {"type": "integer", "minimum": 0},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "flags": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+# Python environment
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# User content: copyrighted audio + private lyrics never go in Git
+songs/
+inbox/
+
+# Local database (library, permissions, export log)
+data/karaoke.db
+
+# YouTube sign-in cookies for downloads: a login, never in Git
+data/youtube-cookies.txt
+cookies*.txt
+
+# Model caches / downloaded weights
+.cache/
+models/
+hub/
+*.pt
+*.th
+*.safetensors
+*.bin
+
+# Front end / render build output
+node_modules/
+dist/
+out/
+
+# OS / editor
+Thumbs.db
+desktop.ini
+.vscode/

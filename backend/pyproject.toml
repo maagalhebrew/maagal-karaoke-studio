@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "karaoke"
+version = "0.1.0"
+description = "Hebrew Karaoke Studio: pipeline, CLI and API"
+requires-python = ">=3.11,<3.12"
+# torch / torchaudio are installed separately from the CUDA 12.6 index (see CLAUDE.md).
+dependencies = [
+    "demucs",
+    "huggingface_hub",
+    "faster-whisper",
+    "stable-ts",
+    "jsonschema",
+    "fastapi",
+    "uvicorn",
+    "yt-dlp[default]",  # import page: audio from a YouTube link (needs Node.js, passed as --js-runtimes node)
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "httpx"]
+
+[project.scripts]
+karaoke = "karaoke.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["karaoke*"]
+
+[tool.setuptools.package-data]
+karaoke = ["*.json"]

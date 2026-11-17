@@ -1,0 +1,6 @@
+{
+  "_note": "Excerpt guard thresholds for songs whose permission is not Granted. Working rules, not legal advice.",
+  "maxContinuousSeconds": 30,
+  "maxShareOfSong": 0.25,
+  "maxShareOfVideo": 0.5
+}

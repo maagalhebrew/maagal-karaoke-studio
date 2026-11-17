@@ -1,0 +1,17 @@
+/* Caption look. Sizes follow the default preset: lyrics 100%, English ~60%. */
+.captions {
+  --cap-size: 44px;
+  --cap-text: #f5f5f4;
+  --cap-highlight: #facc15;
+  font-family: 'Heebo Variable', 'Heebo', sans-serif;
+  color: var(--cap-text);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  line-height: 1.25;
+}
+.cap-tier { display: flex; flex-wrap: wrap; justify-content: center; column-gap: 0.45em; }
+.cap-lyrics { font-size: var(--cap-size); font-weight: 600; }
+.cap-en { font-size: calc(var(--cap-size) * var(--cap-en-scale, 0.6)); font-weight: 400; opacity: 0.9; }
+.cap-word { white-space: nowrap; }

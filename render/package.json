@@ -1,0 +1,22 @@
+{
+  "name": "karaoke-render",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Remotion project: lesson videos and caption overlays. Imports caption components from ../frontend/src/captions.",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource-variable/heebo": "5.3.0",
+    "@remotion/cli": "4.0.539",
+    "@remotion/media": "4.0.539",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.539"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "typescript": "7.0.2"
+  }
+}

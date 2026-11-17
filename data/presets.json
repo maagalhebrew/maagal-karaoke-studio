@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "presets": {
+    "default": {
+      "heSizePx": 84, "enScale": 0.6,
+      "textColor": "#f5f5f4", "highlightColor": "#facc15",
+      "boxOpacity": 0.45, "verticalPosition": 0.85, "showNiqqud": false
+    },
+    "clean": {
+      "heSizePx": 84, "enScale": 0.6,
+      "textColor": "#ffffff", "highlightColor": "#38bdf8",
+      "boxOpacity": 0, "verticalPosition": 0.9, "showNiqqud": false
+    },
+    "big-center": {
+      "heSizePx": 110, "enScale": 0.6,
+      "textColor": "#f5f5f4", "highlightColor": "#facc15",
+      "boxOpacity": 0.3, "verticalPosition": 0.5, "showNiqqud": false
+    }
+  }
+}

@@ -1,0 +1,1 @@
+"""Hebrew Karaoke Studio backend."""
