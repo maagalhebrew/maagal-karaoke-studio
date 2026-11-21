@@ -1,0 +1,91 @@
+{
+  "datasetKind": "synthetic",
+  "recordings": [
+    {
+      "id": "synthetic-solo",
+      "recordingType": "solo",
+      "durationMs": 5000,
+      "lines": [
+        {
+          "id": "first",
+          "words": [
+            {
+              "id": "one",
+              "startMs": 500,
+              "endMs": 800
+            },
+            {
+              "id": "two",
+              "startMs": 950,
+              "endMs": 1300
+            }
+          ]
+        },
+        {
+          "id": "second",
+          "words": [
+            {
+              "id": "three",
+              "startMs": 2000,
+              "endMs": 2400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "synthetic-choir",
+      "recordingType": "choir",
+      "durationMs": 5000,
+      "lines": [
+        {
+          "id": "first",
+          "words": [
+            {
+              "id": "one",
+              "startMs": 500,
+              "endMs": 900
+            }
+          ]
+        },
+        {
+          "id": "second",
+          "words": [
+            {
+              "id": "two",
+              "startMs": 2000,
+              "endMs": 2500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "synthetic-live",
+      "recordingType": "live",
+      "durationMs": 5000,
+      "lines": [
+        {
+          "id": "first",
+          "words": [
+            {
+              "id": "one",
+              "startMs": 1200,
+              "endMs": 1600
+            }
+          ]
+        },
+        {
+          "id": "second",
+          "words": [
+            {
+              "id": "two",
+              "startMs": 3000,
+              "endMs": 3400
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

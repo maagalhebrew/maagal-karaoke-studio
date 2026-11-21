@@ -1,0 +1,387 @@
+{
+  "schema": 2,
+  "song": {
+    "id": "maagal-hatikva",
+    "title": "Hatikva",
+    "artist": "Children`s Art Festival «Kaleidoscope»",
+    "language": "he",
+    "permissionId": null,
+    "durationMs": 103190,
+    "audio": {
+      "original": "audio/original.wav",
+      "vocals": "audio/vocals.wav",
+      "instrumental": "audio/instrumental.wav"
+    },
+    "recordingCredit": {
+      "title": "2020 ★   \"Hatikvah\"| Hymn of Israel  ★ Festival ★ «Kaleidoscope» (Israel)",
+      "artist": "Children’s Art Festival «Kaleidoscope». Produced by Sannikovs Land. Creative idea by Vera Sannikova. Voice editing, mix and mastering by TimoTi Sannikov. The source lists the individual musicians and singers. Words by Naftali Herz Imber. Melody adapted by Samuel Cohen.",
+      "source": "https://www.youtube.com/watch?v=UitCVqynudQ",
+      "license": "Creative Commons Attribution (CC BY), as published on YouTube",
+      "licenseUrl": "https://support.google.com/youtube/answer/2797468",
+      "changes": "Audio extracted and resampled. Vocal and backing stems separated. Maagal added timing, pronunciation and English."
+    }
+  },
+  "lines": [
+    {
+      "id": "L1",
+      "english": "As long as, deep within the heart,",
+      "pronunciation": "kol od ba-le-VAV pni-MAH",
+      "words": [
+        {
+          "id": "L1W1",
+          "plain": "כֹּל",
+          "startMs": 24000,
+          "endMs": 25780,
+          "confidence": 0.15,
+          "flags": []
+        },
+        {
+          "id": "L1W2",
+          "plain": "עוֹד",
+          "startMs": 25780,
+          "endMs": 26160,
+          "confidence": 0.137,
+          "flags": []
+        },
+        {
+          "id": "L1W3",
+          "plain": "בַּלֵּבָב",
+          "startMs": 26160,
+          "endMs": 28080,
+          "confidence": 0.447,
+          "flags": []
+        },
+        {
+          "id": "L1W4",
+          "plain": "פְּנִימָה",
+          "startMs": 28080,
+          "endMs": 30220,
+          "confidence": 0.345,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L2",
+      "english": "a Jewish soul yearns,",
+      "pronunciation": "NE-fesh ye-hoo-DI ho-mi-YAH",
+      "words": [
+        {
+          "id": "L2W1",
+          "plain": "נֶפֶשׁ",
+          "startMs": 32000,
+          "endMs": 32880,
+          "confidence": 0.135,
+          "flags": []
+        },
+        {
+          "id": "L2W2",
+          "plain": "יְהוּדִי",
+          "startMs": 32880,
+          "endMs": 35020,
+          "confidence": 0.358,
+          "flags": []
+        },
+        {
+          "id": "L2W3",
+          "plain": "הוֹמִיָּה",
+          "startMs": 35020,
+          "endMs": 37440,
+          "confidence": 0.207,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L3",
+      "english": "and toward the distant east",
+      "pronunciation": "ool-fa-a-TEI miz-RACH ka-DI-mah",
+      "words": [
+        {
+          "id": "L3W1",
+          "plain": "וּלְפַאֲתֵי",
+          "startMs": 38400,
+          "endMs": 40320,
+          "confidence": 0.103,
+          "flags": []
+        },
+        {
+          "id": "L3W2",
+          "plain": "מִזְרָח",
+          "startMs": 40320,
+          "endMs": 42240,
+          "confidence": 0.303,
+          "flags": []
+        },
+        {
+          "id": "L3W3",
+          "plain": "קָדִימָה",
+          "startMs": 42240,
+          "endMs": 44720,
+          "confidence": 0.44,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L4",
+      "english": "an eye looks toward Zion,",
+      "pronunciation": "A-yin le-tzi-YON tzo-fi-YAH",
+      "words": [
+        {
+          "id": "L4W1",
+          "plain": "עַיִן",
+          "startMs": 45360,
+          "endMs": 47340,
+          "confidence": 0.677,
+          "flags": []
+        },
+        {
+          "id": "L4W2",
+          "plain": "לְצִיּוֹן",
+          "startMs": 47340,
+          "endMs": 49100,
+          "confidence": 0.806,
+          "flags": []
+        },
+        {
+          "id": "L4W3",
+          "plain": "צוֹפִיָּה",
+          "startMs": 49100,
+          "endMs": 51440,
+          "confidence": 0.447,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L5",
+      "english": "our hope is still alive,",
+      "pronunciation": "od lo av-DAH tik-va-TE-noo",
+      "words": [
+        {
+          "id": "L5W1",
+          "plain": "עוֹד",
+          "startMs": 51780,
+          "endMs": 53980,
+          "confidence": 0.092,
+          "flags": []
+        },
+        {
+          "id": "L5W2",
+          "plain": "לֹא",
+          "startMs": 53980,
+          "endMs": 54540,
+          "confidence": 0.512,
+          "flags": []
+        },
+        {
+          "id": "L5W3",
+          "plain": "אָבְדָה",
+          "startMs": 54540,
+          "endMs": 56600,
+          "confidence": 0.193,
+          "flags": []
+        },
+        {
+          "id": "L5W4",
+          "plain": "תִּקְוָתֵנוּ",
+          "startMs": 56600,
+          "endMs": 58480,
+          "confidence": 0.291,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L6",
+      "english": "the hope of two thousand years,",
+      "pronunciation": "ha-tik-VAH bat shnot al-PA-yim",
+      "words": [
+        {
+          "id": "L6W1",
+          "plain": "הַתִּקְוָה",
+          "startMs": 60840,
+          "endMs": 62240,
+          "confidence": 0.026,
+          "flags": []
+        },
+        {
+          "id": "L6W2",
+          "plain": "בַּת",
+          "startMs": 62240,
+          "endMs": 63640,
+          "confidence": 0.0,
+          "flags": []
+        },
+        {
+          "id": "L6W3",
+          "plain": "שְׁנוֹת",
+          "startMs": 63640,
+          "endMs": 63960,
+          "confidence": 0.076,
+          "flags": []
+        },
+        {
+          "id": "L6W4",
+          "plain": "אַלְפַּיִם",
+          "startMs": 63960,
+          "endMs": 65800,
+          "confidence": 0.205,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L7",
+      "english": "to be a free people in our land,",
+      "pronunciation": "lih-YOT am chof-SHI be-ar-TZE-noo",
+      "words": [
+        {
+          "id": "L7W1",
+          "plain": "לִהְיוֹת",
+          "startMs": 66720,
+          "endMs": 68440,
+          "confidence": 0.003,
+          "flags": []
+        },
+        {
+          "id": "L7W2",
+          "plain": "עַם",
+          "startMs": 68440,
+          "endMs": 68900,
+          "confidence": 0.001,
+          "flags": []
+        },
+        {
+          "id": "L7W3",
+          "plain": "חָפְשִׁי",
+          "startMs": 68900,
+          "endMs": 70340,
+          "confidence": 0.463,
+          "flags": []
+        },
+        {
+          "id": "L7W4",
+          "plain": "בְּאַרְצֵנוּ",
+          "startMs": 70340,
+          "endMs": 72980,
+          "confidence": 0.122,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L8",
+      "english": "the land of Zion and Jerusalem.",
+      "pronunciation": "E-retz tzi-YON vi-roo-sha-LA-yim",
+      "words": [
+        {
+          "id": "L8W1",
+          "plain": "אֶרֶץ",
+          "startMs": 73860,
+          "endMs": 75660,
+          "confidence": 0.228,
+          "flags": []
+        },
+        {
+          "id": "L8W2",
+          "plain": "צִיּוֹן",
+          "startMs": 75660,
+          "endMs": 77240,
+          "confidence": 0.08,
+          "flags": []
+        },
+        {
+          "id": "L8W3",
+          "plain": "וִירוּשָׁלַיִם",
+          "startMs": 77240,
+          "endMs": 78760,
+          "confidence": 0.397,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L9",
+      "english": "to be a free people in our land,",
+      "pronunciation": "lih-YOT am chof-SHI be-ar-TZE-noo",
+      "words": [
+        {
+          "id": "L9W1",
+          "plain": "לִהְיוֹת",
+          "startMs": 80000,
+          "endMs": 82440,
+          "confidence": 0.232,
+          "flags": []
+        },
+        {
+          "id": "L9W2",
+          "plain": "עַם",
+          "startMs": 82440,
+          "endMs": 82960,
+          "confidence": 0.015,
+          "flags": []
+        },
+        {
+          "id": "L9W3",
+          "plain": "חָפְשִׁי",
+          "startMs": 82960,
+          "endMs": 84360,
+          "confidence": 0.591,
+          "flags": []
+        },
+        {
+          "id": "L9W4",
+          "plain": "בְּאַרְצֵנוּ",
+          "startMs": 84420,
+          "endMs": 87080,
+          "confidence": 0.401,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L10",
+      "english": "the land of Zion and Jerusalem.",
+      "pronunciation": "E-retz tzi-YON vi-roo-sha-LA-yim",
+      "words": [
+        {
+          "id": "L10W1",
+          "plain": "אֶרֶץ",
+          "startMs": 88620,
+          "endMs": 89780,
+          "confidence": 0.617,
+          "flags": []
+        },
+        {
+          "id": "L10W2",
+          "plain": "צִיּוֹן",
+          "startMs": 89780,
+          "endMs": 91580,
+          "confidence": 0.378,
+          "flags": []
+        },
+        {
+          "id": "L10W3",
+          "plain": "וִירוּשָׁלַיִם",
+          "startMs": 91580,
+          "endMs": 92960,
+          "confidence": 0.496,
+          "flags": []
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "id": "S1",
+      "kind": "verse",
+      "label": "Song",
+      "fromLine": "L1",
+      "toLine": "L10"
+    }
+  ],
+  "clips": [],
+  "drills": []
+}

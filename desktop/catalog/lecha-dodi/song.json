@@ -1,0 +1,1373 @@
+{
+  "schema": 2,
+  "song": {
+    "id": "maagal-lecha-dodi",
+    "title": "Lecha Dodi",
+    "artist": "Ye'arot Ensemble",
+    "language": "he",
+    "permissionId": null,
+    "durationMs": 301070,
+    "audio": {
+      "original": "audio/original.wav",
+      "vocals": "audio/vocals.wav",
+      "instrumental": "audio/instrumental.wav"
+    },
+    "recordingCredit": {
+      "title": "Lacha Dodi ❃ Ye'arot Ensemble Live from Oud Festival Jerusalem",
+      "artist": "Ye’arot Ensemble. Composition and lead vocal by Maayan Tzafrir. Arrangement by Maayan Tzafrir and Avri Borchov. Meytal Rahmin, Michal Tamari, Yanush Hurwitz, Meira Segal and Nur Bar Goren. Live recording by Tsvika. Mix by Shlomi Mor. Words from Lecha Dodi by Shlomo Halevi Alkabetz and the Song of Songs.",
+      "source": "https://www.youtube.com/watch?v=g_xk-sDQ2bE",
+      "license": "Creative Commons Attribution (CC BY), as published on YouTube",
+      "licenseUrl": "https://support.google.com/youtube/answer/2797468",
+      "changes": "Audio extracted and resampled. Vocal and backing stems separated. Maagal added timing, pronunciation and English."
+    }
+  },
+  "lines": [
+    {
+      "id": "L1",
+      "english": "Wake up, wake up.",
+      "pronunciation": "hit-o-re-RI hit-o-re-RI",
+      "words": [
+        {
+          "id": "L1W1",
+          "plain": "הִתְעוֹרְרִי",
+          "startMs": 69000,
+          "endMs": 70400,
+          "confidence": 0.602,
+          "flags": []
+        },
+        {
+          "id": "L1W2",
+          "plain": "הִתְעוֹרְרִי",
+          "startMs": 70400,
+          "endMs": 71800,
+          "confidence": 0.819,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L2",
+      "english": "Your light has come. Rise and shine.",
+      "pronunciation": "ki va o-RECH KOO-mi O-ri",
+      "words": [
+        {
+          "id": "L2W1",
+          "plain": "כִּי",
+          "startMs": 75000,
+          "endMs": 75200,
+          "confidence": 0.203,
+          "flags": []
+        },
+        {
+          "id": "L2W2",
+          "plain": "בָא",
+          "startMs": 75200,
+          "endMs": 75560,
+          "confidence": 0.024,
+          "flags": []
+        },
+        {
+          "id": "L2W3",
+          "plain": "אוֹרֵךְ",
+          "startMs": 75560,
+          "endMs": 77260,
+          "confidence": 0.485,
+          "flags": []
+        },
+        {
+          "id": "L2W4",
+          "plain": "קוּמִי",
+          "startMs": 78420,
+          "endMs": 79340,
+          "confidence": 0.293,
+          "flags": []
+        },
+        {
+          "id": "L2W5",
+          "plain": "אוֹרִי",
+          "startMs": 79340,
+          "endMs": 81180,
+          "confidence": 0.352,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L3",
+      "english": "Awake, awake, lift your voice in song.",
+      "pronunciation": "OO-ri OO-ri shir da-BE-ri",
+      "words": [
+        {
+          "id": "L3W1",
+          "plain": "עוּרִי",
+          "startMs": 85250,
+          "endMs": 87430,
+          "confidence": 0.663,
+          "flags": []
+        },
+        {
+          "id": "L3W2",
+          "plain": "עוּרִי",
+          "startMs": 87430,
+          "endMs": 88090,
+          "confidence": 0.827,
+          "flags": []
+        },
+        {
+          "id": "L3W3",
+          "plain": "שִׁיר",
+          "startMs": 91790,
+          "endMs": 92350,
+          "confidence": 0.769,
+          "flags": []
+        },
+        {
+          "id": "L3W4",
+          "plain": "דַּבֵּרִי",
+          "startMs": 92350,
+          "endMs": 93810,
+          "confidence": 0.947,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L4",
+      "english": "The glory of the Lord appears over you.",
+      "pronunciation": "kvod a-do-NAI a-LA-yich nig-LAH",
+      "words": [
+        {
+          "id": "L4W1",
+          "plain": "כְּבוֹד",
+          "startMs": 95450,
+          "endMs": 96290,
+          "confidence": 0.978,
+          "flags": []
+        },
+        {
+          "id": "L4W2",
+          "plain": "אֲדֹנָי",
+          "startMs": 96290,
+          "endMs": 96990,
+          "confidence": 0.389,
+          "flags": []
+        },
+        {
+          "id": "L4W3",
+          "plain": "עָלַיִךְ",
+          "startMs": 96990,
+          "endMs": 98790,
+          "confidence": 0.265,
+          "flags": []
+        },
+        {
+          "id": "L4W4",
+          "plain": "נִגְלָה",
+          "startMs": 98790,
+          "endMs": 101110,
+          "confidence": 0.691,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L5",
+      "english": "Wake up, wake up.",
+      "pronunciation": "hit-o-re-RI hit-o-re-RI",
+      "words": [
+        {
+          "id": "L5W1",
+          "plain": "הִתְעוֹרְרִי",
+          "startMs": 107000,
+          "endMs": 108640,
+          "confidence": 0.132,
+          "flags": []
+        },
+        {
+          "id": "L5W2",
+          "plain": "הִתְעוֹרְרִי",
+          "startMs": 108640,
+          "endMs": 110620,
+          "confidence": 0.385,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L6",
+      "english": "Your light has come. Rise and shine.",
+      "pronunciation": "ki va o-RECH KOO-mi O-ri",
+      "words": [
+        {
+          "id": "L6W1",
+          "plain": "כִּי",
+          "startMs": 110800,
+          "endMs": 111020,
+          "confidence": 0.119,
+          "flags": []
+        },
+        {
+          "id": "L6W2",
+          "plain": "בָא",
+          "startMs": 111020,
+          "endMs": 111320,
+          "confidence": 0.056,
+          "flags": []
+        },
+        {
+          "id": "L6W3",
+          "plain": "אוֹרֵךְ",
+          "startMs": 111320,
+          "endMs": 112260,
+          "confidence": 0.04,
+          "flags": []
+        },
+        {
+          "id": "L6W4",
+          "plain": "קוּמִי",
+          "startMs": 112260,
+          "endMs": 113040,
+          "confidence": 0.448,
+          "flags": []
+        },
+        {
+          "id": "L6W5",
+          "plain": "אוֹרִי",
+          "startMs": 113040,
+          "endMs": 113700,
+          "confidence": 0.065,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L7",
+      "english": "Awake, awake, lift your voice in song.",
+      "pronunciation": "OO-ri OO-ri shir da-BE-ri",
+      "words": [
+        {
+          "id": "L7W1",
+          "plain": "עוּרִי",
+          "startMs": 114000,
+          "endMs": 115100,
+          "confidence": 0.08,
+          "flags": []
+        },
+        {
+          "id": "L7W2",
+          "plain": "עוּרִי",
+          "startMs": 115100,
+          "endMs": 115900,
+          "confidence": 0.593,
+          "flags": []
+        },
+        {
+          "id": "L7W3",
+          "plain": "שִׁיר",
+          "startMs": 115900,
+          "endMs": 116520,
+          "confidence": 0.807,
+          "flags": []
+        },
+        {
+          "id": "L7W4",
+          "plain": "דַּבֵּרִי",
+          "startMs": 116520,
+          "endMs": 117500,
+          "confidence": 0.447,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L8",
+      "english": "The glory of the Lord appears over you.",
+      "pronunciation": "kvod a-do-NAI a-LA-yich nig-LAH",
+      "words": [
+        {
+          "id": "L8W1",
+          "plain": "כְּבוֹד",
+          "startMs": 117600,
+          "endMs": 118200,
+          "confidence": 0.773,
+          "flags": []
+        },
+        {
+          "id": "L8W2",
+          "plain": "אֲדֹנָי",
+          "startMs": 118200,
+          "endMs": 118880,
+          "confidence": 0.528,
+          "flags": []
+        },
+        {
+          "id": "L8W3",
+          "plain": "עָלַיִךְ",
+          "startMs": 118880,
+          "endMs": 119940,
+          "confidence": 0.048,
+          "flags": []
+        },
+        {
+          "id": "L8W4",
+          "plain": "נִגְלָה",
+          "startMs": 119940,
+          "endMs": 120700,
+          "confidence": 0.132,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L9",
+      "english": "Who is this coming up from the desert?",
+      "pronunciation": "mi zot o-LAH min ha-mid-BAR",
+      "words": [
+        {
+          "id": "L9W1",
+          "plain": "מִי",
+          "startMs": 140500,
+          "endMs": 141880,
+          "confidence": 0.788,
+          "flags": []
+        },
+        {
+          "id": "L9W2",
+          "plain": "זֹאת",
+          "startMs": 141880,
+          "endMs": 142160,
+          "confidence": 0.947,
+          "flags": []
+        },
+        {
+          "id": "L9W3",
+          "plain": "עֹלָה",
+          "startMs": 142160,
+          "endMs": 142800,
+          "confidence": 0.528,
+          "flags": []
+        },
+        {
+          "id": "L9W4",
+          "plain": "מִן",
+          "startMs": 142800,
+          "endMs": 143380,
+          "confidence": 0.368,
+          "flags": []
+        },
+        {
+          "id": "L9W5",
+          "plain": "הַמִּדְבָּר",
+          "startMs": 143380,
+          "endMs": 143640,
+          "confidence": 0.202,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L10",
+      "english": "Who is this coming up from the desert?",
+      "pronunciation": "mi zot o-LAH min ha-mid-BAR",
+      "words": [
+        {
+          "id": "L10W1",
+          "plain": "מִי",
+          "startMs": 144700,
+          "endMs": 145340,
+          "confidence": 0.531,
+          "flags": []
+        },
+        {
+          "id": "L10W2",
+          "plain": "זֹאת",
+          "startMs": 145340,
+          "endMs": 145600,
+          "confidence": 0.84,
+          "flags": []
+        },
+        {
+          "id": "L10W3",
+          "plain": "עֹלָה",
+          "startMs": 145600,
+          "endMs": 146120,
+          "confidence": 0.058,
+          "flags": []
+        },
+        {
+          "id": "L10W4",
+          "plain": "מִן",
+          "startMs": 146120,
+          "endMs": 146920,
+          "confidence": 0.13,
+          "flags": []
+        },
+        {
+          "id": "L10W5",
+          "plain": "הַמִּדְבָּר",
+          "startMs": 146920,
+          "endMs": 147060,
+          "confidence": 0.173,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L11",
+      "english": "Scented with myrrh and frankincense,",
+      "pronunciation": "me-koo-TE-ret mor ool-vo-NAH",
+      "words": [
+        {
+          "id": "L11W1",
+          "plain": "מְקֻטֶּרֶת",
+          "startMs": 148150,
+          "endMs": 149870,
+          "confidence": 0.121,
+          "flags": []
+        },
+        {
+          "id": "L11W2",
+          "plain": "מֹר",
+          "startMs": 149870,
+          "endMs": 150590,
+          "confidence": 0.019,
+          "flags": []
+        },
+        {
+          "id": "L11W3",
+          "plain": "וּלְבוֹנָה",
+          "startMs": 150590,
+          "endMs": 151070,
+          "confidence": 0.035,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L12",
+      "english": "with all the spice merchant’s powders.",
+      "pronunciation": "mi-KOL av-KAT ro-CHEL",
+      "words": [
+        {
+          "id": "L12W1",
+          "plain": "מִכֹּל",
+          "startMs": 151200,
+          "endMs": 152440,
+          "confidence": 0.51,
+          "flags": []
+        },
+        {
+          "id": "L12W2",
+          "plain": "אַבְקַת",
+          "startMs": 152440,
+          "endMs": 153080,
+          "confidence": 0.751,
+          "flags": []
+        },
+        {
+          "id": "L12W3",
+          "plain": "רוֹכֵל",
+          "startMs": 153080,
+          "endMs": 153620,
+          "confidence": 0.353,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L13",
+      "english": "Who is this coming up from the desert?",
+      "pronunciation": "mi zot o-LAH min ha-mid-BAR",
+      "words": [
+        {
+          "id": "L13W1",
+          "plain": "מִי",
+          "startMs": 154700,
+          "endMs": 155580,
+          "confidence": 0.532,
+          "flags": []
+        },
+        {
+          "id": "L13W2",
+          "plain": "זֹאת",
+          "startMs": 155580,
+          "endMs": 155800,
+          "confidence": 0.825,
+          "flags": []
+        },
+        {
+          "id": "L13W3",
+          "plain": "עֹלָה",
+          "startMs": 155800,
+          "endMs": 156360,
+          "confidence": 0.275,
+          "flags": []
+        },
+        {
+          "id": "L13W4",
+          "plain": "מִן",
+          "startMs": 156360,
+          "endMs": 157100,
+          "confidence": 0.057,
+          "flags": []
+        },
+        {
+          "id": "L13W5",
+          "plain": "הַמִּדְבָּר",
+          "startMs": 157100,
+          "endMs": 159080,
+          "confidence": 0.071,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L14",
+      "english": "Who is this coming up from the desert?",
+      "pronunciation": "mi zot o-LAH min ha-mid-BAR",
+      "words": [
+        {
+          "id": "L14W1",
+          "plain": "מִי",
+          "startMs": 159100,
+          "endMs": 159200,
+          "confidence": 0.131,
+          "flags": []
+        },
+        {
+          "id": "L14W2",
+          "plain": "זֹאת",
+          "startMs": 159200,
+          "endMs": 159240,
+          "confidence": 0.064,
+          "flags": [
+            "timing-adjusted"
+          ]
+        },
+        {
+          "id": "L14W3",
+          "plain": "עֹלָה",
+          "startMs": 159240,
+          "endMs": 159880,
+          "confidence": 0.138,
+          "flags": [
+            "timing-adjusted"
+          ]
+        },
+        {
+          "id": "L14W4",
+          "plain": "מִן",
+          "startMs": 159880,
+          "endMs": 160520,
+          "confidence": 0.383,
+          "flags": []
+        },
+        {
+          "id": "L14W5",
+          "plain": "הַמִּדְבָּר",
+          "startMs": 160520,
+          "endMs": 160780,
+          "confidence": 0.14,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L15",
+      "english": "Scented with myrrh and frankincense,",
+      "pronunciation": "me-koo-TE-ret mor ool-vo-NAH",
+      "words": [
+        {
+          "id": "L15W1",
+          "plain": "מְקֻטֶּרֶת",
+          "startMs": 162100,
+          "endMs": 163560,
+          "confidence": 0.039,
+          "flags": []
+        },
+        {
+          "id": "L15W2",
+          "plain": "מֹר",
+          "startMs": 163560,
+          "endMs": 164380,
+          "confidence": 0.434,
+          "flags": []
+        },
+        {
+          "id": "L15W3",
+          "plain": "וּלְבוֹנָה",
+          "startMs": 164380,
+          "endMs": 164840,
+          "confidence": 0.404,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L16",
+      "english": "with all the spice merchant’s powders.",
+      "pronunciation": "mi-KOL av-KAT ro-CHEL",
+      "words": [
+        {
+          "id": "L16W1",
+          "plain": "מִכֹּל",
+          "startMs": 165600,
+          "endMs": 166160,
+          "confidence": 0.472,
+          "flags": []
+        },
+        {
+          "id": "L16W2",
+          "plain": "אַבְקַת",
+          "startMs": 166160,
+          "endMs": 166780,
+          "confidence": 0.335,
+          "flags": []
+        },
+        {
+          "id": "L16W3",
+          "plain": "רוֹכֵל",
+          "startMs": 166780,
+          "endMs": 167700,
+          "confidence": 0.414,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L17",
+      "english": "Shake off the dust and rise.",
+      "pronunciation": "hit-na-a-RI me-a-FAR KOO-mi",
+      "words": [
+        {
+          "id": "L17W1",
+          "plain": "הִתְנַעֲרִי",
+          "startMs": 168850,
+          "endMs": 169790,
+          "confidence": 0.024,
+          "flags": []
+        },
+        {
+          "id": "L17W2",
+          "plain": "מֵעָפָר",
+          "startMs": 169790,
+          "endMs": 171310,
+          "confidence": 0.005,
+          "flags": []
+        },
+        {
+          "id": "L17W3",
+          "plain": "קוּמִי",
+          "startMs": 171310,
+          "endMs": 172030,
+          "confidence": 0.352,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L18",
+      "english": "Put on your finest clothes, my people.",
+      "pronunciation": "liv-SHI big-DEI tif-ar-TECH a-MI",
+      "words": [
+        {
+          "id": "L18W1",
+          "plain": "לִבְשִׁי",
+          "startMs": 172120,
+          "endMs": 173000,
+          "confidence": 0.445,
+          "flags": []
+        },
+        {
+          "id": "L18W2",
+          "plain": "בִּגְדֵי",
+          "startMs": 173000,
+          "endMs": 173760,
+          "confidence": 0.667,
+          "flags": []
+        },
+        {
+          "id": "L18W3",
+          "plain": "תִפְאַרְתֵּךְ",
+          "startMs": 173760,
+          "endMs": 174940,
+          "confidence": 0.117,
+          "flags": []
+        },
+        {
+          "id": "L18W4",
+          "plain": "עַמִּי",
+          "startMs": 174940,
+          "endMs": 175580,
+          "confidence": 0.66,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L19",
+      "english": "Through the son of Jesse of Bethlehem,",
+      "pronunciation": "al yad ben yi-SHAI beit ha-lach-MI",
+      "words": [
+        {
+          "id": "L19W1",
+          "plain": "עַל",
+          "startMs": 175720,
+          "endMs": 176440,
+          "confidence": 0.511,
+          "flags": []
+        },
+        {
+          "id": "L19W2",
+          "plain": "יַד",
+          "startMs": 176440,
+          "endMs": 176860,
+          "confidence": 0.969,
+          "flags": []
+        },
+        {
+          "id": "L19W3",
+          "plain": "בֶּן",
+          "startMs": 176860,
+          "endMs": 177220,
+          "confidence": 0.753,
+          "flags": []
+        },
+        {
+          "id": "L19W4",
+          "plain": "יִשַׁי",
+          "startMs": 177220,
+          "endMs": 177660,
+          "confidence": 0.645,
+          "flags": []
+        },
+        {
+          "id": "L19W5",
+          "plain": "בֵּית",
+          "startMs": 177660,
+          "endMs": 178000,
+          "confidence": 0.477,
+          "flags": []
+        },
+        {
+          "id": "L19W6",
+          "plain": "הַלַּחְמִי",
+          "startMs": 178000,
+          "endMs": 178760,
+          "confidence": 0.76,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L20",
+      "english": "draw near to my soul and redeem it.",
+      "pronunciation": "kor-VAH el naf-SHI ge-a-LAH",
+      "words": [
+        {
+          "id": "L20W1",
+          "plain": "קָרְבָה",
+          "startMs": 179010,
+          "endMs": 179590,
+          "confidence": 0.654,
+          "flags": []
+        },
+        {
+          "id": "L20W2",
+          "plain": "אֶל",
+          "startMs": 179590,
+          "endMs": 179850,
+          "confidence": 0.972,
+          "flags": []
+        },
+        {
+          "id": "L20W3",
+          "plain": "נַפְשִׁי",
+          "startMs": 179850,
+          "endMs": 180630,
+          "confidence": 0.501,
+          "flags": []
+        },
+        {
+          "id": "L20W4",
+          "plain": "גְּאָלָהּ",
+          "startMs": 180630,
+          "endMs": 181610,
+          "confidence": 0.276,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L21",
+      "english": "Awake, awake, lift your voice in song.",
+      "pronunciation": "OO-ri OO-ri shir da-BE-ri",
+      "words": [
+        {
+          "id": "L21W1",
+          "plain": "עוּרִי",
+          "startMs": 195000,
+          "endMs": 196720,
+          "confidence": 0.43,
+          "flags": []
+        },
+        {
+          "id": "L21W2",
+          "plain": "עוּרִי",
+          "startMs": 196720,
+          "endMs": 197460,
+          "confidence": 0.866,
+          "flags": []
+        },
+        {
+          "id": "L21W3",
+          "plain": "שִׁיר",
+          "startMs": 197460,
+          "endMs": 198160,
+          "confidence": 0.854,
+          "flags": []
+        },
+        {
+          "id": "L21W4",
+          "plain": "דַּבֵּרִי",
+          "startMs": 198160,
+          "endMs": 199160,
+          "confidence": 0.043,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L22",
+      "english": "Let me see your face.",
+      "pronunciation": "har-I-ni et mar-A-yich",
+      "words": [
+        {
+          "id": "L22W1",
+          "plain": "הַרְאִינִי",
+          "startMs": 199500,
+          "endMs": 200540,
+          "confidence": 0.308,
+          "flags": []
+        },
+        {
+          "id": "L22W2",
+          "plain": "אֶת",
+          "startMs": 200540,
+          "endMs": 201520,
+          "confidence": 0.062,
+          "flags": []
+        },
+        {
+          "id": "L22W3",
+          "plain": "מַרְאַיִךְ",
+          "startMs": 201520,
+          "endMs": 202480,
+          "confidence": 0.287,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L23",
+      "english": "Awake, awake, lift your voice in song.",
+      "pronunciation": "OO-ri OO-ri shir da-BE-ri",
+      "words": [
+        {
+          "id": "L23W1",
+          "plain": "עוּרִי",
+          "startMs": 202500,
+          "endMs": 203620,
+          "confidence": 0.021,
+          "flags": []
+        },
+        {
+          "id": "L23W2",
+          "plain": "עוּרִי",
+          "startMs": 203620,
+          "endMs": 203720,
+          "confidence": 0.036,
+          "flags": []
+        },
+        {
+          "id": "L23W3",
+          "plain": "שִׁיר",
+          "startMs": 203720,
+          "endMs": 204880,
+          "confidence": 0.01,
+          "flags": []
+        },
+        {
+          "id": "L23W4",
+          "plain": "דַּבֵּרִי",
+          "startMs": 204880,
+          "endMs": 205320,
+          "confidence": 0.006,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L24",
+      "english": "Let me hear your voice.",
+      "pronunciation": "hash-mi-I-ni et ko-LECH",
+      "words": [
+        {
+          "id": "L24W1",
+          "plain": "הַשְׁמִיעִינִי",
+          "startMs": 205360,
+          "endMs": 207800,
+          "confidence": 0.582,
+          "flags": []
+        },
+        {
+          "id": "L24W2",
+          "plain": "אֶת",
+          "startMs": 207800,
+          "endMs": 208560,
+          "confidence": 0.543,
+          "flags": []
+        },
+        {
+          "id": "L24W3",
+          "plain": "קוֹלֵךְ",
+          "startMs": 208560,
+          "endMs": 209280,
+          "confidence": 0.352,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L25",
+      "english": "Awake, awake, lift your voice in song.",
+      "pronunciation": "OO-ri OO-ri shir da-BE-ri",
+      "words": [
+        {
+          "id": "L25W1",
+          "plain": "עוּרִי",
+          "startMs": 209320,
+          "endMs": 210760,
+          "confidence": 0.134,
+          "flags": []
+        },
+        {
+          "id": "L25W2",
+          "plain": "עוּרִי",
+          "startMs": 210760,
+          "endMs": 211460,
+          "confidence": 0.377,
+          "flags": []
+        },
+        {
+          "id": "L25W3",
+          "plain": "שִׁיר",
+          "startMs": 211460,
+          "endMs": 212060,
+          "confidence": 0.008,
+          "flags": []
+        },
+        {
+          "id": "L25W4",
+          "plain": "דַּבֵּרִי",
+          "startMs": 212060,
+          "endMs": 213100,
+          "confidence": 0.288,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L26",
+      "english": "Let me see your face.",
+      "pronunciation": "har-I-ni et mar-A-yich",
+      "words": [
+        {
+          "id": "L26W1",
+          "plain": "הַרְאִינִי",
+          "startMs": 213200,
+          "endMs": 214660,
+          "confidence": 0.435,
+          "flags": []
+        },
+        {
+          "id": "L26W2",
+          "plain": "אֶת",
+          "startMs": 214660,
+          "endMs": 215400,
+          "confidence": 0.042,
+          "flags": []
+        },
+        {
+          "id": "L26W3",
+          "plain": "מַרְאַיִךְ",
+          "startMs": 215400,
+          "endMs": 215980,
+          "confidence": 0.373,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L27",
+      "english": "Awake, awake, lift your voice in song.",
+      "pronunciation": "OO-ri OO-ri shir da-BE-ri",
+      "words": [
+        {
+          "id": "L27W1",
+          "plain": "עוּרִי",
+          "startMs": 216000,
+          "endMs": 217540,
+          "confidence": 0.083,
+          "flags": []
+        },
+        {
+          "id": "L27W2",
+          "plain": "עוּרִי",
+          "startMs": 217540,
+          "endMs": 218300,
+          "confidence": 0.332,
+          "flags": []
+        },
+        {
+          "id": "L27W3",
+          "plain": "שִׁיר",
+          "startMs": 218300,
+          "endMs": 218640,
+          "confidence": 0.344,
+          "flags": []
+        },
+        {
+          "id": "L27W4",
+          "plain": "דַּבֵּרִי",
+          "startMs": 218640,
+          "endMs": 219220,
+          "confidence": 0.061,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L28",
+      "english": "Let me hear your voice.",
+      "pronunciation": "hash-mi-I-ni et ko-LECH",
+      "words": [
+        {
+          "id": "L28W1",
+          "plain": "הַשְׁמִיעִינִי",
+          "startMs": 220600,
+          "endMs": 221400,
+          "confidence": 0.235,
+          "flags": []
+        },
+        {
+          "id": "L28W2",
+          "plain": "אֶת",
+          "startMs": 221400,
+          "endMs": 221800,
+          "confidence": 0.001,
+          "flags": []
+        },
+        {
+          "id": "L28W3",
+          "plain": "קוֹלֵךְ",
+          "startMs": 221800,
+          "endMs": 222180,
+          "confidence": 0.009,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L29",
+      "english": "Who is this coming up from the desert?",
+      "pronunciation": "mi zot o-LAH min ha-mid-BAR",
+      "words": [
+        {
+          "id": "L29W1",
+          "plain": "מִי",
+          "startMs": 268500,
+          "endMs": 269900,
+          "confidence": 0.382,
+          "flags": []
+        },
+        {
+          "id": "L29W2",
+          "plain": "זֹאת",
+          "startMs": 269900,
+          "endMs": 270180,
+          "confidence": 0.074,
+          "flags": []
+        },
+        {
+          "id": "L29W3",
+          "plain": "עֹלָה",
+          "startMs": 270180,
+          "endMs": 270760,
+          "confidence": 0.092,
+          "flags": []
+        },
+        {
+          "id": "L29W4",
+          "plain": "מִן",
+          "startMs": 270760,
+          "endMs": 271440,
+          "confidence": 0.084,
+          "flags": []
+        },
+        {
+          "id": "L29W5",
+          "plain": "הַמִּדְבָּר",
+          "startMs": 271440,
+          "endMs": 272380,
+          "confidence": 0.493,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L30",
+      "english": "Who is this coming up from the desert?",
+      "pronunciation": "mi zot o-LAH min ha-mid-BAR",
+      "words": [
+        {
+          "id": "L30W1",
+          "plain": "מִי",
+          "startMs": 272560,
+          "endMs": 273500,
+          "confidence": 0.804,
+          "flags": []
+        },
+        {
+          "id": "L30W2",
+          "plain": "זֹאת",
+          "startMs": 273500,
+          "endMs": 273720,
+          "confidence": 0.886,
+          "flags": []
+        },
+        {
+          "id": "L30W3",
+          "plain": "עֹלָה",
+          "startMs": 273720,
+          "endMs": 274320,
+          "confidence": 0.424,
+          "flags": []
+        },
+        {
+          "id": "L30W4",
+          "plain": "מִן",
+          "startMs": 274320,
+          "endMs": 275120,
+          "confidence": 0.092,
+          "flags": []
+        },
+        {
+          "id": "L30W5",
+          "plain": "הַמִּדְבָּר",
+          "startMs": 275120,
+          "endMs": 275900,
+          "confidence": 0.41,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L31",
+      "english": "Scented with myrrh and frankincense,",
+      "pronunciation": "me-koo-TE-ret mor ool-vo-NAH",
+      "words": [
+        {
+          "id": "L31W1",
+          "plain": "מְקֻטֶּרֶת",
+          "startMs": 276410,
+          "endMs": 278050,
+          "confidence": 0.342,
+          "flags": []
+        },
+        {
+          "id": "L31W2",
+          "plain": "מֹר",
+          "startMs": 278050,
+          "endMs": 279010,
+          "confidence": 0.216,
+          "flags": []
+        },
+        {
+          "id": "L31W3",
+          "plain": "וּלְבוֹנָה",
+          "startMs": 279010,
+          "endMs": 279490,
+          "confidence": 0.124,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L32",
+      "english": "with all the spice merchant’s powders.",
+      "pronunciation": "mi-KOL av-KAT ro-CHEL",
+      "words": [
+        {
+          "id": "L32W1",
+          "plain": "מִכֹּל",
+          "startMs": 279610,
+          "endMs": 280730,
+          "confidence": 0.5,
+          "flags": []
+        },
+        {
+          "id": "L32W2",
+          "plain": "אַבְקַת",
+          "startMs": 280730,
+          "endMs": 281250,
+          "confidence": 0.495,
+          "flags": []
+        },
+        {
+          "id": "L32W3",
+          "plain": "רוֹכֵל",
+          "startMs": 281250,
+          "endMs": 282290,
+          "confidence": 0.285,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L33",
+      "english": "Who is this coming up?",
+      "pronunciation": "mi zot o-LAH",
+      "words": [
+        {
+          "id": "L33W1",
+          "plain": "מִי",
+          "startMs": 282810,
+          "endMs": 283910,
+          "confidence": 0.717,
+          "flags": []
+        },
+        {
+          "id": "L33W2",
+          "plain": "זֹאת",
+          "startMs": 283910,
+          "endMs": 284130,
+          "confidence": 0.856,
+          "flags": []
+        },
+        {
+          "id": "L33W3",
+          "plain": "עֹלָה",
+          "startMs": 284130,
+          "endMs": 284690,
+          "confidence": 0.277,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L34",
+      "english": "Who is this coming up?",
+      "pronunciation": "mi zot o-LAH",
+      "words": [
+        {
+          "id": "L34W1",
+          "plain": "מִי",
+          "startMs": 286160,
+          "endMs": 287300,
+          "confidence": 0.417,
+          "flags": []
+        },
+        {
+          "id": "L34W2",
+          "plain": "זֹאת",
+          "startMs": 287300,
+          "endMs": 287540,
+          "confidence": 0.387,
+          "flags": []
+        },
+        {
+          "id": "L34W3",
+          "plain": "עֹלָה",
+          "startMs": 287540,
+          "endMs": 288100,
+          "confidence": 0.18,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L35",
+      "english": "Scented with myrrh and frankincense,",
+      "pronunciation": "me-koo-TE-ret mor ool-vo-NAH",
+      "words": [
+        {
+          "id": "L35W1",
+          "plain": "מְקֻטֶּרֶת",
+          "startMs": 289560,
+          "endMs": 291760,
+          "confidence": 0.043,
+          "flags": []
+        },
+        {
+          "id": "L35W2",
+          "plain": "מֹר",
+          "startMs": 291760,
+          "endMs": 292580,
+          "confidence": 0.071,
+          "flags": []
+        },
+        {
+          "id": "L35W3",
+          "plain": "וּלְבוֹנָה",
+          "startMs": 292580,
+          "endMs": 292920,
+          "confidence": 0.142,
+          "flags": []
+        }
+      ]
+    },
+    {
+      "id": "L36",
+      "english": "with all the spice merchant’s powders.",
+      "pronunciation": "mi-KOL av-KAT ro-CHEL",
+      "words": [
+        {
+          "id": "L36W1",
+          "plain": "מִכֹּל",
+          "startMs": 293040,
+          "endMs": 294400,
+          "confidence": 0.63,
+          "flags": []
+        },
+        {
+          "id": "L36W2",
+          "plain": "אַבְקַת",
+          "startMs": 294400,
+          "endMs": 295020,
+          "confidence": 0.683,
+          "flags": []
+        },
+        {
+          "id": "L36W3",
+          "plain": "רוֹכֵל",
+          "startMs": 295020,
+          "endMs": 295920,
+          "confidence": 0.106,
+          "flags": []
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "id": "S1",
+      "kind": "verse",
+      "label": "Song",
+      "fromLine": "L1",
+      "toLine": "L36"
+    }
+  ],
+  "clips": [],
+  "drills": []
+}

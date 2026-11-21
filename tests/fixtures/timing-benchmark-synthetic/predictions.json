@@ -1,0 +1,89 @@
+{
+  "candidate": "Synthetic scorer fixture",
+  "hardware": {
+    "os": "Synthetic OS",
+    "cpu": "Synthetic CPU",
+    "ramBytes": 8000000000
+  },
+  "modelSizeBytes": 1600000000,
+  "recordings": [
+    {
+      "id": "synthetic-solo",
+      "runtimeSeconds": 2.5,
+      "peakMemoryBytes": 1000000000,
+      "lines": [
+        {
+          "id": "first",
+          "mode": "words",
+          "words": [
+            {
+              "id": "two",
+              "startMs": 1150,
+              "endMs": 1500
+            },
+            {
+              "id": "one",
+              "startMs": 600,
+              "endMs": 950
+            }
+          ]
+        },
+        {
+          "id": "second",
+          "mode": "line",
+          "startMs": 1950,
+          "endMs": 2500,
+          "words": []
+        }
+      ]
+    },
+    {
+      "id": "synthetic-choir",
+      "runtimeSeconds": 5,
+      "peakMemoryBytes": 1100000000,
+      "lines": [
+        {
+          "id": "first",
+          "mode": "words",
+          "words": [
+            {
+              "id": "one",
+              "startMs": 800,
+              "endMs": 1500
+            }
+          ]
+        },
+        {
+          "id": "second",
+          "mode": "line",
+          "startMs": 2000,
+          "endMs": 2500,
+          "words": []
+        }
+      ]
+    },
+    {
+      "id": "synthetic-live",
+      "runtimeSeconds": 10,
+      "peakMemoryBytes": 1200000000,
+      "lines": [
+        {
+          "id": "first",
+          "mode": "words",
+          "words": [
+            {
+              "id": "one",
+              "startMs": 1800,
+              "endMs": 2300
+            }
+          ]
+        },
+        {
+          "id": "second",
+          "mode": "none",
+          "words": []
+        }
+      ]
+    }
+  ]
+}

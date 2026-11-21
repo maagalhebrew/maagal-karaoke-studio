@@ -13,13 +13,13 @@ import threading
 import time
 import uuid
 from datetime import datetime
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from urllib.parse import urlparse
 
 import numpy as np
 
 from . import lyrics as lyrics_mod
-from . import paths, permissions, translate
+from . import desktop_songs, paths, permissions, translate
 from .cli import slugify
 from .songfile import load, save
 from .stages import AUDIO_TYPES, STAGES, StageError, duration_s
@@ -102,7 +102,7 @@ def new_upload(name: str) -> Path:
     if ext not in AUDIO_TYPES | CONVERT_TYPES:
         kinds = ", ".join(sorted(t[1:].upper() for t in AUDIO_TYPES | CONVERT_TYPES))
         raise ImportError_(f"That file type can't be used. Audio files work: {kinds}.")
-    paths.INBOX.mkdir(exist_ok=True)
+    paths.INBOX.mkdir(parents=True, exist_ok=True)
     for old in paths.INBOX.glob("upload-*.*"):
         if time.time() - old.stat().st_mtime > UPLOAD_KEEP_S:
             old.unlink(missing_ok=True)
@@ -253,7 +253,7 @@ def check(text: str, language: str = "he", english_lines: bool | None = None) ->
 def _fresh_env() -> dict:
     """PATH from the registry: a server started from an old shell may not see ffmpeg/node installed later."""
     env = dict(os.environ)
-    if sys.platform == "win32":
+    if sys.platform == "win32" and not env.get("KARAOKE_DESKTOP"):
         import winreg
         parts = []
         for root, key in ((winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment"),
@@ -270,6 +270,9 @@ def _fresh_env() -> dict:
 
 def _unique_slug(title: str) -> str:
     base = slugify(title) if title and re.search(r"[A-Za-z0-9]", title) else "song-" + datetime.now().strftime("%Y%m%d-%H%M")
+    base = base[:72].rstrip("-")
+    if PureWindowsPath(base).is_reserved():
+        base = "song-" + base
     slug, n = base, 2
     while (paths.SONGS / slug).exists() or any(paths.INBOX.glob(f"{slug}.*")):
         slug, n = f"{base}-{n}", n + 1
@@ -282,27 +285,59 @@ def status() -> dict | None:
 
 
 def start(url: str, text: str, title: str = "", artist: str = "", model: str = "", upload: str = "",
-          language: str = "he", english_lines: bool | None = None) -> dict:
+          language: str = "he", english_lines: bool | None = None, mode: str = "automatic") -> dict:
     """Start an import from a YouTube `url`, or from an `upload` id (then `url` is ignored)."""
     global _job
+    if mode not in ("manual", "automatic"):
+        raise ImportError_("Choose manual or automatic timing.")
     audio = _upload_file(upload) if upload else None
     if audio is None:
+        if mode == "manual" or os.environ.get("KARAOKE_DESKTOP"):
+            raise ImportError_("Choose an audio file first.")
         host = urlparse(url.strip()).hostname or ""
         if host.lower() not in YOUTUBE_HOSTS:
             raise ImportError_("Paste a YouTube link (youtube.com or youtu.be).")
     summary = check(text, language, english_lines)
     if summary["problems"]:
         raise ImportError_(" ".join(summary["problems"]))
+    if mode == "automatic" and os.environ.get("KARAOKE_DESKTOP"):
+        from . import desktop_models
+        if not desktop_models.status(language)["automaticReady"]:
+            raise ImportError_("Set up automatic timing for this language, or choose to set the timing yourself.")
     with _lock:
         if _job and _job["state"] == "running":
             raise ImportError_("Another song is still being processed; wait for it to finish.")
         slug = _unique_slug(title)
-        steps = ["upload", *STAGES] if audio else STEPS
+        steps = ["upload", "ingest", "assemble"] if mode == "manual" else ["upload", *STAGES] if audio else STEPS
         _job = {"slug": slug, "state": "running", "error": None, "note": None, "startedAt": time.time(), "lyrics": summary,
                 "steps": [{"name": n, "state": "waiting", "seconds": None} for n in steps]}
-    threading.Thread(target=_run, args=(slug, url.strip(), text, title.strip(), artist.strip(), model.strip(), audio,
-                                        language, english_lines), daemon=True).start()
+    if mode == "manual":
+        thread = threading.Thread(target=_run_manual, args=(slug, text, title.strip(), artist.strip(), audio,
+                                                            language, english_lines), daemon=True)
+    else:
+        thread = threading.Thread(target=_run, args=(slug, url.strip(), text, title.strip(), artist.strip(),
+                                                     model.strip(), audio, language, english_lines), daemon=True)
+    thread.start()
     return status()
+
+
+def _run_manual(slug: str, text: str, title: str, artist: str, upload: Path, language: str, english_lines: bool | None):
+    _set("upload", "done", 0.0)
+    try:
+        desktop_songs.make_draft(slug, upload, text, title, artist, language, english_lines, _set)
+    except (StageError, ValueError) as exc:
+        _set(exc.stage if isinstance(exc, StageError) else "assemble", "failed", error=str(exc))
+        return
+    except (OSError, subprocess.SubprocessError):
+        _set("ingest", "failed", error="The recording could not be prepared. Check the file and available disk space, then try again.")
+        return
+    # The finished song contains its own copy of the recording. A failed import leaves the upload available to retry.
+    try:
+        upload.unlink(missing_ok=True)
+    except OSError:
+        pass  # old uploads are also cleaned up by new_upload()
+    with _lock:
+        _job["state"] = "done"
 
 
 def _set(name: str, state: str, seconds: float | None = None, error: str | None = None):
@@ -374,7 +409,12 @@ def _pipeline(slug: str, audio: Path, text: str, title: str, artist: str, env: d
     lyrics_path = paths.INBOX / f"{slug}.txt"
     lyrics_path.write_text(text, encoding="utf-8")
     eng = {None: "auto", True: "yes", False: "no"}[english_lines]
-    proc = subprocess.Popen([sys.executable, "-m", "karaoke.cli", "add", str(audio), str(lyrics_path), "--slug", slug,
+    python = sys.executable
+    if os.environ.get("KARAOKE_DESKTOP"):
+        from . import desktop_models
+        python = str(desktop_models.python_for(language))
+        env.update(desktop_models.worker_env(language))
+    proc = subprocess.Popen([python, "-m", "karaoke.cli", "add", str(audio), str(lyrics_path), "--slug", slug,
                              "--language", language, "--english-lines", eng],
                             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, encoding="utf-8",
                             errors="replace", env=env, cwd=str(paths.ROOT))

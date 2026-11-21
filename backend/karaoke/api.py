@@ -3,18 +3,22 @@
 Paths are read from `paths` at call time so tests can point them at a temp folder.
 """
 import json
+import os
 import re
 import subprocess
+import tempfile
 import threading
 from datetime import datetime
+from pathlib import Path
 
 import numpy as np
 from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
+from starlette.background import BackgroundTask
 
-from . import importer, learning, library, lineedit, paths, permissions, stages, suggest, translate, wordedit
+from . import desktop_export, desktop_songs, export, importer, learning, library, lineedit, paths, permissions, song_archive, stages, suggest, translate, wordedit
 from .songfile import load, save, validation_errors
 from .stages import MIN_WORD_MS, _key
 
@@ -24,7 +28,12 @@ PEAKS_PER_SECOND = 200
 PEAKS_SAMPLE_RATE = 8000
 
 _write_lock = threading.Lock()
+_export_lock = threading.Lock()
 app = FastAPI(title="Karaoke Studio")
+
+
+def export_in_progress() -> bool:
+    return _export_lock.locked()
 
 # The server listens on this computer only, but every web page open in the browser is on this computer too.
 # Two checks keep other sites out:
@@ -48,8 +57,10 @@ async def only_this_computer(request: Request, call_next):
     if _hostname(request.headers.get("host", "")) not in ALLOWED_HOSTS:
         return PlainTextResponse("Unknown host: open the studio at http://127.0.0.1:8321", status_code=400)
     origin = request.headers.get("origin")
-    if request.method not in SAFE_METHODS and origin is not None and _hostname(origin) not in ALLOWED_HOSTS:
-        return PlainTextResponse("Changes can only come from the studio's own pages", status_code=403)
+    if request.method not in SAFE_METHODS and origin is not None:
+        wrong_desktop_origin = os.environ.get("KARAOKE_DESKTOP") and origin != str(request.base_url).rstrip("/")
+        if _hostname(origin) not in ALLOWED_HOSTS or wrong_desktop_origin:
+            return PlainTextResponse("Changes can only come from the studio's own pages", status_code=403)
     return await call_next(request)
 
 
@@ -80,49 +91,7 @@ def _words(song: dict):
         yield from line["words"]
 
 
-def _timing_errors(song: dict) -> list[str]:
-    errors, prev_end = [], 0
-    duration = song["song"]["durationMs"]
-    for w in _words(song):
-        if w["startMs"] < prev_end:
-            errors.append(f"{w['id']} starts before the previous word ends")
-        if w["endMs"] - w["startMs"] < MIN_WORD_MS:
-            errors.append(f"{w['id']} is shorter than {MIN_WORD_MS} ms")
-        if w["endMs"] > duration:
-            errors.append(f"{w['id']} ends after the song")
-        prev_end = w["endMs"]
-    return errors
-
-
-def _reference_errors(song: dict) -> list[str]:
-    """Sections/clips/drills must point at real lines/words/clips, in order, without overlapping sections."""
-    errors = []
-    line_idx = {line["id"]: i for i, line in enumerate(song["lines"])}
-    word_idx = {w["id"]: i for i, w in enumerate(_words(song))}
-    prev_to = -1
-    for s in song["sections"]:
-        a, b = line_idx.get(s["fromLine"]), line_idx.get(s["toLine"])
-        if a is None or b is None or a > b:
-            errors.append(f"section {s['id']} has an invalid line range")
-        elif a <= prev_to:
-            errors.append(f"section {s['id']} overlaps the previous section")
-        else:
-            prev_to = b
-    for kind in ("sections", "clips", "drills"):
-        ids = [x["id"] for x in song[kind]]
-        if len(ids) != len(set(ids)):
-            errors.append(f"duplicate {kind} ids")
-    clip_ids = set()
-    for c in song["clips"]:
-        a, b = word_idx.get(c["fromWord"]), word_idx.get(c["toWord"])
-        if a is None or b is None or a > b:
-            errors.append(f"clip {c['id']} has an invalid word range")
-        clip_ids.add(c["id"])
-    for d in song["drills"]:
-        for n, step in enumerate(d["steps"], 1):
-            if step["type"] == "clip" and step["clip"] not in clip_ids:
-                errors.append(f"drill {d['id']} step {n} uses missing clip {step['clip']}")
-    return errors
+from .songfile import timing_errors as _timing_errors, reference_errors as _reference_errors
 
 
 # --- songs ------------------------------------------------------------------------
@@ -135,21 +104,22 @@ def list_songs():
     songs = _all_songs()
     practised, learn = _learning(songs)
     out = []
-    if paths.SONGS.is_dir():
-        for folder in sorted(paths.SONGS.iterdir()):
-            if (folder / "song.json").is_file():
-                s = songs[folder.name]
-                sid = s["song"]["id"]
-                words = list(_words(s))
-                flagged = sum(1 for w in words if w["flags"])
-                out.append({"id": sid, "title": s["song"]["title"], "artist": s["song"]["artist"],
-                            "durationMs": s["song"]["durationMs"], "words": len(words), "flaggedWords": flagged,
-                            "status": library.status(s, flagged, sid in exported),
-                            "permission": perms[sid]["status"] if sid in perms else "Not asked",
-                            "favorite": sid in favs, "folders": member.get(sid, []),
-                            "practice": practised.get(sid, {"seconds": 0, "practiceSeconds": 0, "lastDay": None, "days": 0}),
-                            "learning": {k: v for k, v in learn[folder.name].items() if k != "newWordIds"},
-                            "addedAt": datetime.fromtimestamp(folder.stat().st_ctime).strftime("%Y-%m-%d")})
+    for name, s in songs.items():
+        try:
+            added = (paths.SONGS / name).stat().st_ctime
+        except FileNotFoundError:
+            continue
+        sid = s["song"]["id"]
+        words = list(_words(s))
+        flagged = sum(1 for w in words if w["flags"])
+        out.append({"id": sid, "title": s["song"]["title"], "artist": s["song"]["artist"],
+                    "durationMs": s["song"]["durationMs"], "words": len(words), "flaggedWords": flagged,
+                    "status": library.status(s, flagged, sid in exported),
+                    "permission": perms[sid]["status"] if sid in perms else "Not asked",
+                    "favorite": sid in favs, "folders": member.get(sid, []),
+                    "practice": practised.get(sid, {"seconds": 0, "practiceSeconds": 0, "lastDay": None, "days": 0}),
+                    "learning": {k: v for k, v in learn[name].items() if k != "newWordIds"},
+                    "addedAt": datetime.fromtimestamp(added).strftime("%Y-%m-%d")})
     return out
 
 
@@ -568,7 +538,7 @@ def import_start(body: dict = Body(...)):
         return importer.start(str(body.get("url", "")), str(body.get("lyrics", "")),
                               str(body.get("title", "")), str(body.get("artist", "")), str(body.get("model", "")),
                               str(body.get("upload", "")), str(body.get("language", "he")),
-                              importer.english_lines_option(body.get("englishLines")))
+                              importer.english_lines_option(body.get("englishLines")), str(body.get("mode", "automatic")))
     except importer.ImportError_ as e:
         raise HTTPException(422, str(e)) from None
 
@@ -605,6 +575,98 @@ def translate_models():
 def import_status():
     """The running (or last) import; null when there hasn't been one since the server started."""
     return importer.status()
+
+
+@app.get("/api/desktop/setup")
+def desktop_setup_status(language: str = "he"):
+    from . import desktop_models
+    try:
+        return desktop_models.status(language)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from None
+
+
+@app.post("/api/desktop/setup")
+def desktop_setup_start(body: dict = Body(...)):
+    from . import desktop_models
+    try:
+        return desktop_models.start(str(body.get("language", "he")))
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from None
+
+
+@app.post("/api/desktop/sample")
+def open_sample():
+    with _write_lock:
+        slug = desktop_songs.add_sample()
+        if not permissions.get(slug).get("updated_at"):
+            permissions.save(slug, {"artist": "Karaoke IL", "status": "Granted", "scope": "Built-in practice exercise"})
+        return {"id": slug}
+
+
+@app.post("/api/desktop/export/{song_id}/{kind}")
+def create_export(song_id: str, kind: str, body: dict = Body(...)):
+    _folder(song_id)
+    if not _export_lock.acquire(blocking=False):
+        raise HTTPException(409, "Another export is in progress. Try again when it finishes.")
+    try:
+        output, filename = desktop_export.create(song_id, kind, body)
+        return {"filename": filename, "download": f"/api/desktop/files/{song_id}/{output.name}"}
+    except export.GuardError as exc:
+        raise HTTPException(409, {"warnings": exc.warnings, "permission": exc.status}) from None
+    except export.ExportError as exc:
+        raise HTTPException(422, str(exc)) from None
+    except OSError:
+        raise HTTPException(409, "Check available disk space and try exporting again.") from None
+    finally:
+        _export_lock.release()
+
+
+@app.get("/api/desktop/files/{song_id}/{name}")
+def download_export(song_id: str, name: str):
+    valid = re.fullmatch(r"(lesson|overlay|subtitles)-[a-f0-9]{32}(\.mp4|\.mov|\.zip)", name)
+    if not valid:
+        raise HTTPException(404, "Export not found.")
+    file = _folder(song_id) / "exports" / name
+    if not file.is_file():
+        raise HTTPException(404, "Export not found.")
+    return FileResponse(file, filename=f"{song_id}-{valid[1]}{valid[2]}")
+
+
+@app.get("/api/desktop/backup/{song_id}")
+def backup_song(song_id: str):
+    with _write_lock:
+        try:
+            archive = song_archive.backup(_folder(song_id))
+        except OSError:
+            raise HTTPException(409, "The song could not be copied. Check the audio files and available disk space.") from None
+    return FileResponse(archive, media_type="application/zip", filename=f"{song_id}.zip",
+                        background=BackgroundTask(archive.unlink, missing_ok=True))
+
+
+@app.post("/api/desktop/restore", status_code=201)
+async def restore_song(request: Request):
+    def publish(source):
+        with _write_lock:
+            job = importer.status()
+            busy = job["slug"] if job and job["state"] == "running" else None
+            return song_archive.restore(source, lambda doc: _timing_errors(doc) or _reference_errors(doc), busy)
+
+    with tempfile.TemporaryDirectory() as staging:
+        archive = Path(staging) / "selected.zip"
+        size = 0
+        try:
+            with archive.open("wb") as out:
+                async for chunk in request.stream():
+                    size += len(chunk)
+                    if size > song_archive.MAX_BYTES:
+                        raise HTTPException(413, "Choose a song ZIP smaller than 2 GB.")
+                    out.write(chunk)
+            return {"id": await run_in_threadpool(publish, archive)}
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from None
+        except OSError:
+            raise HTTPException(409, "The song could not be saved. Check the available disk space and try again.") from None
 
 
 # --- the built editor (frontend/dist), mounted last so /api wins ------------------
