@@ -17,9 +17,12 @@
         "artist": {"type": "string"},
         "language": {"enum": ["he", "es"]},
         "permissionId": {"type": ["integer", "null"]},
+        "recordingCredit": {"type":"object", "required":["title","artist","source","license","licenseUrl","changes"], "additionalProperties":false,
+          "properties":{"title":{"type":"string"},"artist":{"type":"string"},"source":{"type":"string"},"license":{"type":"string"},"licenseUrl":{"type":"string"},"changes":{"type":"string"}}},
+        "availableTracks": {"const": ["original"]},
         "audio": {
           "type": "object",
-          "required": ["original", "vocals", "instrumental"],
+          "required": ["original"],
           "additionalProperties": false,
           "properties": {
             "original": {"type": "string"},
@@ -28,7 +31,10 @@
           }
         },
         "durationMs": {"type": "integer", "minimum": 1}
-      }
+      },
+      "if": {"required": ["availableTracks"]},
+      "then": {"properties": {"audio": {"maxProperties": 1}}},
+      "else": {"properties": {"audio": {"required": ["vocals", "instrumental"]}}}
     },
     "lines": {
       "type": "array",
@@ -40,6 +46,7 @@
         "properties": {
           "id": {"$ref": "#/$defs/lineId"},
           "english": {"type": "string"},
+          "pronunciation": {"type": "string"},
           "words": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/word"}}
         }
       }

@@ -71,6 +71,11 @@ def _ass_color(hex_rgb: str, alpha: int = 0) -> str:
     return f"&H{alpha:02X}{b:02X}{g:02X}{r:02X}"
 
 
+def ass_text(value: str) -> str:
+    # Keep typed braces and backslashes from being interpreted as subtitle layout commands.
+    return value.replace("\\", "\\\u200b").replace("{", "\\{").replace("}", "\\}").replace("\r", "").replace("\n", "\\N")
+
+
 def _karaoke(song: dict, line: dict, cue_start_abs: int, show_niqqud: bool) -> str:
     """The lyrics with \\kf fills: each word fills over its own span, as in the editor's captions;
     pauses between words are plain \\k waits."""
@@ -79,7 +84,7 @@ def _karaoke(song: dict, line: dict, cue_start_abs: int, show_niqqud: bool) -> s
         start_cs, end_cs = round(w["startMs"] / 10), round(w["endMs"] / 10)
         if start_cs > cursor_cs:
             parts.append(f"{{\\k{start_cs - cursor_cs}}}")
-        parts.append(f"{{\\kf{max(end_cs - max(start_cs, cursor_cs), 0)}}}{word_text(w, show_niqqud)}")
+        parts.append(f"{{\\kf{max(end_cs - max(start_cs, cursor_cs), 0)}}}{ass_text(word_text(w, show_niqqud))}")
         cursor_cs = max(end_cs, cursor_cs)
         if n < len(line["words"]) - 1:
             parts.append(" ")
@@ -125,5 +130,5 @@ def ass(song: dict, style: dict, from_ms: int, to_ms: int) -> str:
         t0, t1 = _ass_time(start), _ass_time(end)
         events.append(f"Dialogue: 0,{t0},{t1},Lyrics,,0,0,0,,{_karaoke(song, line, start + from_ms, style['showNiqqud'])}")
         if line["english"].strip():
-            events.append(f"Dialogue: 0,{t0},{t1},En,,0,0,0,,{line['english'].strip()}")
+            events.append(f"Dialogue: 0,{t0},{t1},En,,0,0,0,,{ass_text(line['english'].strip())}")
     return head + "\n" + "\n".join(events) + "\n"

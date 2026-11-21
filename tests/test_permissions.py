@@ -124,7 +124,7 @@ def test_serve_prints_due_on_launch(env, capsys):
 
 def test_draft_fills_the_template():
     text = permissions.draft({"contact_name": "", "artist": "דנה"}, "השיר שלי")
-    assert text.startswith("שלום דנה, קוראים לי [השם שלך]") and "והשיר השיר שלי הוא" in text and text.endswith("[טלפון]")
+    assert text.startswith("שלום דנה,") and "״השיר שלי״" in text and text.endswith("תודה רבה!")
 
 
 # --- API --------------------------------------------------------------------------

@@ -138,6 +138,15 @@ def ingest(song: Song) -> dict:
     if lyric_lines == 0:
         lang = LANGUAGES[song.language]
         raise StageError("ingest", f"lyrics file has no {lang} lines (it is empty or contains no {lang})")
+    track, volumes = ingest_audio(song)
+    shutil.copyfile(song.lyrics_src, song.folder / "lyrics.txt")
+    set_lyrics(song, sections)
+    return {"durationMs": song.duration_ms, "audioTrack": f"{track + 1} of {len(volumes)}", "sections": len(sections), "lines": len(song.lines),
+            "lyricLines": lyric_lines, "language": song.language, "words": sum(1 for _ in song.words()),
+            "linesWithEnglish": sum(bool(line["english"]) for line in song.lines)}
+
+
+def ingest_audio(song: Song):
     if song.audio_src.suffix.lower() not in AUDIO_TYPES:
         raise StageError("ingest", f"audio must be MP3, M4A, MP4, WAV, WebM, Opus or OGG, got '{song.audio_src.suffix}'")
     if duration_s(song.audio_src, "ingest") <= 0:
@@ -156,24 +165,23 @@ def ingest(song: Song) -> dict:
     _run(["ffmpeg", "-v", "error", "-y", "-i", str(song.audio_src), "-map", f"0:a:{track}", "-vn",
           "-af", f"volume={gain:.2f}dB", "-ar", "44100", "-ac", "2", str(original)],
          "ingest", "audio conversion")
-    shutil.copyfile(song.lyrics_src, song.folder / "lyrics.txt")
 
     seconds = duration_s(original, "ingest")
     if seconds <= 0:
         raise StageError("ingest", "converted audio has no duration")
     song.duration_ms = round(seconds * 1000)
-    song.sections = sections
+    return track, volumes
 
-    n = 0
+
+def set_lyrics(song: Song, sections: list) -> None:
+    song.sections = sections
+    song.lines = []
     for section in sections:
         for tokens, english in zip(section.lines, section.english):
-            n += 1
+            n = len(song.lines) + 1
             song.lines.append({"id": f"L{n}", "english": english, "words": [
                 {"id": f"L{n}W{k}", "plain": t, "startMs": 0, "endMs": 0, "confidence": 0.0, "flags": []}
-                for k, t in enumerate(tokens, 1)]})  # as written: vowel points, if given, are kept
-    return {"durationMs": song.duration_ms, "audioTrack": f"{track + 1} of {len(volumes)}", "sections": len(sections), "lines": n,
-            "lyricLines": lyric_lines, "language": song.language, "words": sum(1 for _ in song.words()),
-            "linesWithEnglish": sum(bool(line["english"]) for line in song.lines)}
+                for k, t in enumerate(tokens, 1)]})
 
 
 # --- 2. separate ----------------------------------------------------------------
@@ -185,12 +193,19 @@ def separate(song: Song) -> dict:
     # --shifts 0: no random time shift, so the same song always gives the same stems. With the default random
     # shift, separation (and so alignment) varied run to run: median word confidence 0.74 / 0.49 / 0.74 on Hatikvah.
     base = [sys.executable, "-m", "demucs", "--two-stems", "vocals", "-n", "htdemucs", "--shifts", "0", "-o", str(tmp)]
-    device = "cuda"
+    import torch
+    device = "cpu"
+    if torch.cuda.is_available():
+        device = "cuda"
+    elif torch.backends.mps.is_available():
+        device = "mps"
     try:
-        _run(base + ["-d", "cuda", str(original)], "separate", "Demucs (GPU)")
+        _run(base + ["-d", device, str(original)], "separate", "Separating the recording")
     except StageError:
-        device = "cpu"  # rule 4 fallback
-        _run(base + ["-d", "cpu", str(original)], "separate", "Demucs (CPU fallback)")
+        if device == "cpu":
+            raise
+        device = "cpu"
+        _run(base + ["-d", device, str(original)], "separate", "Separating the recording on CPU")
     out = tmp / "htdemucs" / original.stem
     for src, dst in (("vocals.wav", "vocals.wav"), ("no_vocals.wav", "instrumental.wav")):
         if not (out / src).exists():
@@ -459,7 +474,7 @@ REVIEW_GROUPS = {
 }
 
 
-def assemble(song: Song) -> dict:
+def assemble(song: Song, *, artist: str = "", original_only: bool = False) -> dict:
     sections, n, line_no = [], 0, 0
     for s in song.sections:
         first = line_no + 1
@@ -469,12 +484,15 @@ def assemble(song: Song) -> dict:
                          "fromLine": f"L{first}", "toLine": f"L{line_no}"})
     doc = {
         "schema": VERSION,
-        "song": {"id": song.slug, "title": song.title, "artist": "", "language": song.language, "permissionId": None,
+        "song": {"id": song.slug, "title": song.title, "artist": artist, "language": song.language, "permissionId": None,
                  "audio": {"original": "audio/original.wav", "vocals": "audio/vocals.wav",
                            "instrumental": "audio/instrumental.wav"},
                  "durationMs": song.duration_ms},
         "lines": song.lines, "sections": sections, "clips": [], "drills": [],
     }
+    if original_only:
+        doc["song"]["audio"] = {"original": "audio/original.wav"}
+        doc["song"]["availableTracks"] = ["original"]
     try:
         save(song.folder, doc)
     except ValueError as e:

@@ -1,7 +1,7 @@
 ﻿"""M1 pipeline tests. The full run needs a Hatikvah recording at inbox/hatikvah.* and is skipped without one."""
 import copy
 import json
-import shutil
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -161,18 +161,17 @@ def test_schema_rejects_float_ms():
 
 
 # --- full run (needs the user's recording) ------------------------------------------
-RECORDING = next(iter(sorted(p for p in INBOX.glob("hatikva*.*") if p.suffix.lower() in stages.AUDIO_TYPES)), None)
+RECORDING = (Path(os.environ["KARAOKE_TEST_RECORDING"]) if os.environ.get("KARAOKE_TEST_RECORDING") else
+             next(iter(sorted(p for p in INBOX.glob("hatikva*.*") if p.suffix.lower() in stages.AUDIO_TYPES)), None))
 
 
 TEST_SLUG = "m1-test-hatikvah"  # never the user's own "hatikvah" song, which they edit in the editor
 
 
 @pytest.fixture
-def test_song_folder():
-    folder = SONGS / TEST_SLUG
-    shutil.rmtree(folder, ignore_errors=True)
-    yield folder
-    shutil.rmtree(folder, ignore_errors=True)
+def test_song_folder(tmp_path, monkeypatch):
+    monkeypatch.setenv("KARAOKE_HOME", str(tmp_path))
+    return tmp_path / "songs" / TEST_SLUG
 
 
 @pytest.mark.skipif(RECORDING is None, reason="put a Hatikvah recording at inbox/hatikva(h).mp3|m4a|mp4|wav")

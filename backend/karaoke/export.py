@@ -56,7 +56,10 @@ def load_song(slug: str) -> tuple[Path, dict]:
 
 
 def load_preset(name: str) -> dict:
-    presets = json.loads((paths.DATA / "presets.json").read_text(encoding="utf-8"))["presets"]
+    path = paths.DATA / "presets.json"
+    if not path.is_file():
+        path = paths.ROOT / "data" / "presets.json"
+    presets = json.loads(path.read_text(encoding="utf-8"))["presets"]
     if name not in presets:
         raise ExportError(f"unknown preset '{name}' (have: {', '.join(presets)})")
     return presets[name]
