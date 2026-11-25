@@ -17,8 +17,9 @@ Shared privately for testing: please don't redistribute. It has no license yet.
   winget install Python.Python.3.11 OpenJS.NodeJS.LTS Gyan.FFmpeg Git.Git
   ```
 - About 10 GB free disk for the AI models and libraries
-- Optional, for automatic English: [Ollama](https://ollama.com) with a model such as `gemma4:12b`
-  (`ollama pull gemma4:12b`). Without it, songs still work and you type the English yourself.
+- Optional, for automatic English: [Ollama](https://ollama.com) with `gemma4:12b`
+  (`ollama pull gemma4:12b`). The app always uses that model and does not offer a choice.
+  Without it, songs still work and you type the English yourself.
 
 ## Set up (once)
 

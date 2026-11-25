@@ -160,6 +160,32 @@ def test_schema_rejects_float_ms():
     assert validation_errors(bad)
 
 
+CREDIT = {"title": "Demo", "artist": "A", "source": "https://example.com", "license": "CC0",
+          "licenseUrl": "https://example.com/license", "changes": "none"}
+
+
+def test_schema_accepts_a_desktop_song_with_only_the_original_recording():
+    song = copy.deepcopy(GOOD)
+    song["song"]["audio"] = {"original": "audio/original.wav"}
+    song["song"]["availableTracks"] = ["original"]
+    song["song"]["recordingCredit"] = CREDIT
+    song["lines"][0]["pronunciation"] = "sha-LOM"
+    assert validation_errors(song) == []
+
+
+def test_schema_requires_stems_unless_the_song_says_only_the_original_is_available():
+    bare = copy.deepcopy(GOOD)
+    bare["song"]["audio"] = {"original": "audio/original.wav"}
+    assert validation_errors(bare)
+    extra = copy.deepcopy(bare)
+    extra["song"]["availableTracks"] = ["original"]
+    extra["song"]["audio"]["vocals"] = "audio/vocals.wav"
+    assert validation_errors(extra)
+    wrong = copy.deepcopy(bare)
+    wrong["song"]["availableTracks"] = ["original", "vocals"]
+    assert validation_errors(wrong)
+
+
 # --- full run (needs the user's recording) ------------------------------------------
 RECORDING = (Path(os.environ["KARAOKE_TEST_RECORDING"]) if os.environ.get("KARAOKE_TEST_RECORDING") else
              next(iter(sorted(p for p in INBOX.glob("hatikva*.*") if p.suffix.lower() in stages.AUDIO_TYPES)), None))
@@ -183,7 +209,8 @@ def test_full_pipeline_on_hatikvah(test_song_folder):
     details = {s["stage"]: s["details"] for s in out["stages"]}
     assert details["align"]["medianConfidence"] >= 0.5
     # local model wrote English for every line (skipped only if Ollama isn't running on this machine)
-    assert details["translate"].get("translated") == 10 or "not reachable" in details["translate"].get("skipped", "")
+    skipped = details["translate"].get("skipped", "")
+    assert details["translate"].get("translated") == 10 or "English translation isn't available" in skipped
 
     folder = test_song_folder
     song = json.loads((folder / "song.json").read_text(encoding="utf-8"))

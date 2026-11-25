@@ -13,7 +13,7 @@ import { debug } from '../debug'
 import { EchoOut } from '../player/echoOut'
 import { Player, type PlayerMode } from '../player/Player'
 import { LINE_ID, RATING_LABELS, lineToRate, nextRating, usePracticeLog } from '../practice'
-import type { Peaks, Section, SectionKind, Song, Tier, Track } from '../types'
+import { tracksIn, type Peaks, Section, SectionKind, Song, Tier, Track } from '../types'
 import { FlagsPanel, TIMING_FLAGS } from './FlagsPanel'
 import { BreakdownPanel } from './BreakdownPanel'
 import { LineList } from './LineList'
@@ -82,7 +82,6 @@ export function Editor({ id }: { id: string }) {
   const [timeMs, setTimeMs] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [track, setTrackState] = useState<Track>('original')
-  const [showNiqqud, setShowNiqqud] = usePref('niqqud', false)
   const [speed, setSpeed] = useState(1)
   const [loop, setLoop] = useState<LoopSpan | null>(null) // a section or a line
   const [loopPauseMs, setLoopPauseMs] = useNumberPref('loopPauseMs', 0)
@@ -138,13 +137,19 @@ export function Editor({ id }: { id: string }) {
   const timer = useRef<number | undefined>(undefined)
 
   useEffect(() => {
-    Promise.all([api.song(id), api.peaks(id, 'vocals'), api.peaks(id, 'original')]).then(([s, v, o]) => {
-      setSong(s); setVocalPeaks(v); setPeaks(o)
+    let cancel = false
+    api.song(id).then(async (s) => {
+      const vocals = Boolean(s.song.audio.vocals)
+      const singing = await api.peaks(id, vocals ? 'vocals' : 'original')
+      const original = vocals ? await api.peaks(id, 'original') : singing
+      if (cancel) return
+      setSong(s); setVocalPeaks(singing); setPeaks(original)
       // Open on what needs doing: words to check first, otherwise the song's sections.
       if (s.lines.some((l) => l.words.some((w) => w.flags.length))) setTab('words')
-    }, (e: Error) => setLoadError(e.message))
+    }, (e: Error) => { if (!cancel) setLoadError(e.message) })
     api.practice(id).then((p) => setLineLoops(p.lineLoops), () => {})
     api.learning(id).then((l) => { setRatings(l.ratings); setNewWordIds(new Set(l.newWordIds)) }, () => {})
+    return () => { cancel = true }
   }, [id])
 
   // Self-ratings per line (keys 1 / 2 / 3, or the ✓ button on a line) and the words new to you.
@@ -360,7 +365,7 @@ export function Editor({ id }: { id: string }) {
   }
 
   // --- spelling ------------------------------------------------------------------------
-  /** Change how a word is written (vowel points, punctuation, capitals), keeping its letters. */
+  /** Change how a word is written (punctuation or capitals), keeping its letters. */
   const applySpelling = async (wordId: string, text: string) => {
     const word = allWords(songRef.current!).find((w) => w.id === wordId)!
     const next = text.trim().normalize('NFC')
@@ -647,7 +652,7 @@ export function Editor({ id }: { id: string }) {
       <div className="main">
         <div className="workspace">
           <div className="preview" data-testid="preview">
-            <Captions line={line} timeMs={timeMs} showNiqqud={showNiqqud} tiers={tiers} language={song.song.language} />
+            <Captions line={line} timeMs={timeMs} tiers={tiers} language={song.song.language} />
           </div>
 
           <Timeline peaks={peaks} vocalPeaks={vocalPeaks} durationMs={song.song.durationMs} audioUrl={api.audioUrl(id, track)} lines={song.lines}
@@ -715,7 +720,7 @@ export function Editor({ id }: { id: string }) {
                       const n = song.lines.findIndex((l) => l.words.some((w) => w.id === wordId)) + 1
                       lineOp({ action: 'split', wordId }, `Line ${n} split into lines ${n} and ${n + 1}`)
                     }}
-                    showNiqqud={showNiqqud} rtl={rtl}
+                    showNiqqud rtl={rtl}
                     onWord={clickWord} onEditWord={editWord} onLine={selectLine} onPlayLine={playLine} onBreakdown={hebrew ? openBreakdown : undefined}
                     onEnglish={(lineId, text) => edit((s) => { s.lines.find((l) => l.id === lineId)!.english = text })} />
         </div>
@@ -734,7 +739,7 @@ export function Editor({ id }: { id: string }) {
           }} />}
           {tab === 'words' && (
             <div className="panel-stack">
-              <FlagsPanel lines={song.lines} selectedId={selectedId} showNiqqud={showNiqqud} onPick={editWord} />
+              <FlagsPanel lines={song.lines} selectedId={selectedId} showNiqqud onPick={editWord} />
               <SuggestionsBox songId={id} lines={song.lines} wordCount={words.length}
                               onPlay={(a, b) => { setLoop(null); ws.current?.play(a / 1000, b / 1000) }}
                               onSelectWord={(wid) => selectWord(wid)}
@@ -745,7 +750,7 @@ export function Editor({ id }: { id: string }) {
                 const i = song.lines.findIndex((l) => l.id === breakdownLineId)
                 return <BreakdownPanel songId={id} line={i >= 0 ? song.lines[i] : null} lineNumber={i + 1} wordId={selectedId}
                                        nextLineId={i >= 0 ? song.lines[i + 1]?.id ?? null : null}
-                                       showNiqqud={showNiqqud} onPickWord={(wid) => selectWord(wid)} />
+                                       showNiqqud onPickWord={(wid) => selectWord(wid)} />
               })()}
             </div>
           )}
@@ -761,7 +766,7 @@ export function Editor({ id }: { id: string }) {
       <footer className="transport">
         {/* Hold ? to see the key each button stands for */}
         <div className="seg" role="group" aria-label="Track">
-          {(['original', 'vocals', 'instrumental'] as Track[]).map((t) => (
+          {tracksIn(song).map((t) => (
             <button key={t} className={track === t ? 'on' : ''} aria-pressed={track === t} onClick={() => setTrack(t)}>{t}</button>
           ))}
         </div>
@@ -793,7 +798,7 @@ export function Editor({ id }: { id: string }) {
           <button className={popover === 'keys' ? 'on' : ''} aria-expanded={popover === 'keys'} aria-label="Keyboard shortcuts" onClick={() => togglePopover('keys')}
                   title="Keyboard shortcuts (tap ?). Hold ? to see each button's key"><Icon name="keys" /></button>
           <button className={popover === 'settings' ? 'on' : ''} aria-expanded={popover === 'settings'} aria-label="Settings" onClick={() => togglePopover('settings')}
-                  title="Loop pause, fade, J/L jump, vowel points"><Icon name="gear" /></button>
+                  title="Loop pause, fade, and the J/L jump"><Icon name="gear" /></button>
           {popover === 'keys' && <ShortcutMap jumpSec={jumpSec} onClose={() => setPopover(null)} />}
           {popover === 'settings' && (
             <div className="settings-pop" role="dialog" aria-label="Playback settings">
@@ -810,9 +815,6 @@ export function Editor({ id }: { id: string }) {
                 </select>
               </label>
               <hr />
-              {words.some((w) => stripNiqqud(w.plain) !== w.plain.normalize('NFC')) && (
-                <label className="toggle" title="This song's lyrics were written with vowel points"><input type="checkbox" checked={showNiqqud} onChange={(e) => setShowNiqqud(e.target.checked)} /> Show vowel points</label>
-              )}
               <label className="toggle" title="Words not found in any song you've practised or rated"><input type="checkbox" checked={markNew} onChange={(e) => setMarkNew(e.target.checked)} /> Mark words new to you</label>
               <p className="hint">Remembered in this browser.</p>
             </div>
@@ -820,10 +822,10 @@ export function Editor({ id }: { id: string }) {
         </span>
       </footer>
 
-      {player && <Player song={song} mode={player} showNiqqud={showNiqqud}
+      {player && <Player song={song} mode={player} showNiqqud
                          loopPauseMs={loopPauseMs} loopFade={loopFade} jumpSec={jumpSec} ratings={ratings} onRate={rate}
                          onClose={() => setPlayer(null)} />}
-      {reviewing && <Review song={song} edit={edit} showNiqqud={showNiqqud} onClose={() => { setReviewing(false); history.replaceState(null, '', `#/song/${id}`) }} />}
+      {reviewing && <Review song={song} edit={edit} showNiqqud onClose={() => { setReviewing(false); history.replaceState(null, '', `#/song/${id}`) }} />}
 
       {tap && (
         <div className="tap-banner" role="status">

@@ -129,6 +129,21 @@ def test_api_join_keeps_the_weaker_rating_and_refuses_bad_requests(client):
 
 
 # --- delete a line (a stray "chorus" line, say) and its undo ----------------------------------------------
+def test_join_and_restore_keep_pronunciation():
+    joined = song_of([3, 3, 2, 2])
+    joined["lines"][0]["pronunciation"] = "one"
+    joined["lines"][1]["pronunciation"] = "two"
+    lineedit.apply(joined, "join", line_id="L1")
+    assert joined["lines"][0]["pronunciation"] == "one two"
+
+    original = song_of([3, 3, 1, 2])
+    original["lines"][2]["pronunciation"] = "kept"
+    s = copy.deepcopy(original)
+    undo = lineedit.apply(s, "delete", line_id="L3")["undo"]
+    lineedit.apply(s, "restore", index=undo["index"], line=undo["line"], sections=undo["sections"])
+    assert s == original
+
+
 def test_delete_line_renumbers_and_restore_puts_it_back_exactly():
     original = song_of([3, 3, 1, 2])
     s = copy.deepcopy(original)

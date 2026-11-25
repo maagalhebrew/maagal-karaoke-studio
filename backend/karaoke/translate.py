@@ -55,7 +55,8 @@ class TranslateError(RuntimeError):
 
 
 def load_settings() -> dict:
-    """data/translate.json over the defaults; KARAOKE_TRANSLATE_MODEL (set by the import page) picks the model."""
+    """data/translate.json over the defaults. KARAOKE_TRANSLATE_MODEL, if the server was started with it,
+    overrides the model name. The editor never offers a choice."""
     path = paths.DATA / "translate.json"
     s = dict(DEFAULTS)
     if path.exists():
@@ -63,6 +64,18 @@ def load_settings() -> dict:
     if os.environ.get("KARAOKE_TRANSLATE_MODEL"):
         s["model"] = os.environ["KARAOKE_TRANSLATE_MODEL"]
     return s
+
+
+PLAIN_UNAVAILABLE = "English translation isn't available. Start Ollama on this computer, or type the English yourself."
+
+
+def translation_ready(settings: dict | None = None) -> bool:
+    """True when Ollama is running and has the configured model. Says nothing about which model that is."""
+    s = settings or load_settings()
+    if not s.get("enabled", True):
+        return False
+    want = str(s["model"])
+    return any(name == want or name.startswith(want + ":") for name in installed_models(s))
 
 
 def installed_models(settings: dict | None = None) -> list[str]:
@@ -80,11 +93,10 @@ def _post(url: str, body: dict, timeout: float) -> dict:
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             return json.loads(r.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        detail = e.read().decode("utf-8", "replace")[:200]
-        raise TranslateError(f"Ollama answered {e.code}: {detail}") from None
-    except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
-        raise TranslateError(f"Ollama is not reachable at {url.rsplit('/api', 1)[0]} ({e}); is the Ollama app running?") from None
+    except urllib.error.HTTPError:
+        raise TranslateError(PLAIN_UNAVAILABLE) from None
+    except (urllib.error.URLError, TimeoutError, ConnectionError):
+        raise TranslateError(PLAIN_UNAVAILABLE) from None
 
 
 def _tokens(text: str) -> list[str]:
@@ -155,7 +167,7 @@ def translate_lines(hebrew: list[str], settings: dict | None = None, language: s
     finally:
         _unload(s)
     if not any(done.values()):
-        raise TranslateError(f"model {s['model']} gave no usable English")
+        raise TranslateError("English translation didn't come back in a usable form. Type the English yourself.")
     return [done[h] for h in hebrew]
 
 
@@ -165,7 +177,7 @@ def translate_in_song(hebrew: list[str], targets: list[int], settings: dict | No
     Returns {index: english} ("" where the model failed). Raises TranslateError if Ollama can't be reached."""
     s = settings or load_settings()
     if not s["enabled"]:
-        raise TranslateError("translation is switched off in data/translate.json")
+        raise TranslateError("English translation is turned off.")
     try:
         return {i: _line("\n".join(hebrew[max(0, i - CONTEXT_BEFORE):i + 1 + CONTEXT_AFTER]), hebrew[i], s, language)
                 for i in targets}
@@ -224,4 +236,4 @@ def breakdown_line(words: list[str], nearby: str = "", settings: dict | None = N
             for w, original in zip(got, words):
                 w["word"] = original  # the lyric's own spelling, whatever the model echoed
             return {"words": got, "literal": out["literal"].strip(), "model": s["model"]}
-    raise TranslateError(f"model {s['model']} gave no usable breakdown")
+    raise TranslateError("The word-by-word breakdown didn't come back in a usable form.")

@@ -8,7 +8,22 @@ export interface Word {
   flags: string[]
 }
 
-export interface Line { id: string; english: string; words: Word[] }
+export interface Line {
+  id: string
+  english: string
+  /** Kept when a desktop song has it. The editor does not show or edit it. */
+  pronunciation?: string
+  words: Word[]
+}
+
+export interface RecordingCredit {
+  title: string
+  artist: string
+  source: string
+  license: string
+  licenseUrl: string
+  changes: string
+}
 
 /** Lyrics compared with what Whisper heard: words possibly missing from the lyrics, or not sung. */
 export interface Suggestion {
@@ -23,10 +38,9 @@ export interface Suggestion {
 }
 export interface Suggestions { available: boolean; suggestions: Suggestion[] }
 
-/** Word-by-word breakdown of one line (local model, cached per line). */
+/** Word-by-word breakdown of one line, cached per line. The editor does not name the program that wrote it. */
 export interface Breakdown {
   literal: string
-  model: string
   words: { word: string; parts: { hebrew: string; english: string }[]; english: string; note: string }[]
 }
 
@@ -59,7 +73,11 @@ export interface Song {
     artist: string
     language: Language
     permissionId: number | null
-    audio: { original: string; vocals: string; instrumental: string }
+    /** Kept when a desktop song has it. The editor does not show it. */
+    recordingCredit?: RecordingCredit
+    /** Present only when the song has the original recording and no separated tracks. */
+    availableTracks?: ['original']
+    audio: { original: string; vocals?: string; instrumental?: string }
     durationMs: number
   }
   lines: Line[]
@@ -87,6 +105,12 @@ export interface PracticeLog { seconds: number; days: { day: string; seconds: nu
 export interface Folder { id: number; name: string; count: number }
 export interface Peaks { peaksPerSecond: number; duration: number; peaks: number[] }
 export type Track = 'original' | 'vocals' | 'instrumental'
+
+/** Tracks this song actually has. A desktop song may have only the original recording. */
+export function tracksIn(song: Song): Track[] {
+  const audio = song.song.audio
+  return (['original', 'vocals', 'instrumental'] as Track[]).filter((track) => Boolean(audio[track]))
+}
 
 export const PERMISSION_STATUSES = ['Not asked', 'Asked', 'Follow-up due', 'Granted', 'Declined', 'No answer'] as const
 export type PermissionStatus = (typeof PERMISSION_STATUSES)[number]

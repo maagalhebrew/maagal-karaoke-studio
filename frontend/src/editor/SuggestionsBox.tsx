@@ -44,7 +44,7 @@ export function SuggestionsBox({ songId, lines, wordCount, onPlay, onAccept, onS
       {!(data.available && data.suggestions.length === 0) && <h2>Lyrics check {data.available && <span className="count">{data.suggestions.length}</span>}</h2>}
       {!data.available ? (
         <>
-          <p className="hint">Whisper listens to the vocals and points out words the lyrics are missing, or lyric words it can't hear.</p>
+          <p className="hint">The check listens to the vocals and points out words the lyrics are missing, or lyric words it can't hear.</p>
           <button disabled={!!busy} onClick={() => run('scan', () => api.scanSuggestions(songId))}>
             {busy === 'scan' ? 'Listening… (about a minute)' : 'Check lyrics against the audio'}
           </button>
@@ -62,7 +62,7 @@ export function SuggestionsBox({ songId, lines, wordCount, onPlay, onAccept, onS
               <span className="suggest-actions">
                 <button onClick={() => onPlay(Math.max(0, s.startMs - 800), s.endMs + 800)} title="Listen to this spot" aria-label="Listen to this spot"><Icon name="play" size={16} /></button>
                 <button className={s.type === 'missing' ? 'ok' : 'danger'} disabled={!!busy}
-                        title={s.type === 'missing' ? 'Add this word to the lyrics where Whisper heard it' : 'Remove this word from the lyrics'}
+                        title={s.type === 'missing' ? 'Add this word to the lyrics where it was heard' : 'Remove this word from the lyrics'}
                         onClick={() => {
                           if (s.type === 'unheard' && !window.confirm('Delete this word from the lyrics?')) return
                           run(s.key, () => onAccept(s))

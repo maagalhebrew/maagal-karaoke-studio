@@ -317,11 +317,10 @@ def _set(name: str, state: str, seconds: float | None = None, error: str | None 
             _job["state"], _job["error"] = "failed", {"step": name, "message": error}
 
 
-def _run(slug: str, url: str, text: str, title: str, artist: str, model: str, upload: Path | None = None,
+def _run(slug: str, url: str, text: str, title: str, artist: str, _model: str = "", upload: Path | None = None,
          language: str = "he", english_lines: bool | None = None):
+    # `_model` is ignored. A request cannot pick a translation model. KARAOKE_TRANSLATE_MODEL on the server still applies.
     env = _fresh_env()
-    if model:
-        env["KARAOKE_TRANSLATE_MODEL"] = model  # read by the translate stage in the pipeline process
     try:
         if upload:
             # 1. the uploaded audio is already in the inbox: give it the song's name

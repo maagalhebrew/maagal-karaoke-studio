@@ -68,6 +68,8 @@ def apply(song: dict, action: str, word_id: str = "", line_id: str = "", to: str
         k = len(a["words"])
         merged = {"id": "", "english": " ".join(e for e in (a["english"].strip(), b["english"].strip()) if e),
                   "words": a["words"] + b["words"]}
+        if "pronunciation" in a or "pronunciation" in b:
+            merged["pronunciation"] = " ".join(p for p in (a.get("pronunciation", ""), b.get("pronunciation", "")) if p)
         entries[i:i + 2] = [(merged, [a["id"], b["id"]])]
         changed, select = [i], (i, k)
         undo = lambda ids, k=k: {"action": "split", "wordId": f"{ids[0]}W{k + 1}"}  # noqa: E731
@@ -123,6 +125,8 @@ def apply(song: dict, action: str, word_id: str = "", line_id: str = "", to: str
                 or not 0 <= index <= len(lines) or not isinstance(sections, list)):
             raise LineEditError("nothing to restore")
         back = {"id": "", "english": str(line.get("english", "")), "words": copy.deepcopy(words)}
+        if isinstance(line.get("pronunciation"), str):
+            back["pronunciation"] = line["pronunciation"]
         for w in back["words"]:
             w["_old"] = None  # new to the song: nothing points at it yet
         entries.insert(index, (back, []))

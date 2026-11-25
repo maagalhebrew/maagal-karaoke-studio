@@ -64,15 +64,28 @@ cd ..
 
 ## Models it expects
 
-The start script does not download these. They are already cached on the laptop
-that was used before. A new computer needs them the first time a song is processed.
+The editor does not list, name, or let you pick a model. The start script does not
+download these. They are already cached on the laptop that was used before. A new
+computer needs them the first time a song is processed.
 
-| Job | Where | Id |
+| Job | Where | What the app uses |
 | --- | --- | --- |
-| English | local Ollama | `gemma4:12b` (`data\translate.json`) |
+| English | local Ollama | always `gemma4:12b` |
 | Separate voice and music | Demucs | `htdemucs` |
-| Time the Hebrew words | Hugging Face | `ivrit-ai/whisper-large-v3-turbo-ct2` |
-| Time the Spanish words | Hugging Face | `mobiuslabsgmbh/faster-whisper-large-v3-turbo` |
+| Time the words | Hugging Face | Hebrew: `ivrit-ai/whisper-large-v3-turbo-ct2`. Spanish: `mobiuslabsgmbh/faster-whisper-large-v3-turbo`. The song's language decides. |
+
+If Ollama is not running, or `gemma4:12b` is not installed, Add a song says that English
+translation isn't available. The song can still be added; type the English in the editor.
+There is no menu of other models.
+
+`data\translate.json` turns English on or off and names `gemma4:12b`. A developer can
+override that name by starting the server with `KARAOKE_TRANSLATE_MODEL` set. Neither
+appears in the editor.
+
+The app does not show vowel points as a setting, and it does not show a pronunciation
+or transliteration line. Lyrics are shown as written. Matching still ignores vowel
+marks internally. The unused niqqud model `dicta-il/dictabert-large-char-menaked` stays
+unused. A copy already on the laptop is left unused.
 
 To download the timing and separation weights on a machine that does not have them yet
 (about 3.5 GB; not required to open the editor):
@@ -81,9 +94,6 @@ To download the timing and separation weights on a machine that does not have th
 .venv\Scripts\python.exe -c "from huggingface_hub import snapshot_download as d; d('ivrit-ai/whisper-large-v3-turbo-ct2'); d('mobiuslabsgmbh/faster-whisper-large-v3-turbo')"
 .venv\Scripts\python.exe -c "from demucs.pretrained import get_model; get_model('htdemucs')"
 ```
-
-The niqqud model `dicta-il/dictabert-large-char-menaked` is not used. It was removed
-before this browser snapshot (milestone M7). A copy already on the laptop is left unused.
 
 Hugging Face weights usually sit in `%USERPROFILE%\.cache\huggingface`. Ollama keeps
 its own model store. Those folders are outside this clone, so cloning does not
@@ -95,12 +105,16 @@ With the defaults, everything is inside the clone:
 
 | Path | What |
 | --- | --- |
-| `songs\<slug>\` | one folder per song: `song.json`, `audio\original.wav`, `audio\vocals.wav`, `audio\instrumental.wav`, `report.json`, `backups\` |
+| `songs\<slug>\` | one folder per song: `song.json`, `audio\original.wav`, and when separation has run `audio\vocals.wav` and `audio\instrumental.wav`, plus `report.json` and `backups\` |
 | `inbox\` | uploads and the lyrics file for a run in progress |
 | `data\karaoke.db` | library, favorites, practice history, permission records, export log |
 | `data\youtube-cookies.txt` | optional YouTube sign-in cookies, if you add them |
-| `data\translate.json` | English on/off and the Ollama model name (this file is in Git) |
+| `data\translate.json` | English on/off for a developer (this file is in Git). The editor does not show it. |
 | `.venv\` | the Python environment |
+
+A song saved by the desktop app opens and saves here too, including one that has only
+`audio\original.wav` (it is marked `availableTracks`) and an optional recording credit.
+A pronunciation note on a line is kept in `song.json` and is not shown.
 
 `KARAOKE_HOME` can point the writable library at another folder. Leave it unset.
 This app does not set it, and it does not use Documents or Desktop.

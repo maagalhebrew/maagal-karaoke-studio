@@ -570,7 +570,7 @@ def import_audio_trim(upload_id: str, body: dict = Body(...)):
 def import_start(body: dict = Body(...)):
     try:
         return importer.start(str(body.get("url", "")), str(body.get("lyrics", "")),
-                              str(body.get("title", "")), str(body.get("artist", "")), str(body.get("model", "")),
+                              str(body.get("title", "")), str(body.get("artist", "")), "",
                               str(body.get("upload", "")), str(body.get("language", "he")),
                               importer.english_lines_option(body.get("englishLines")))
     except importer.ImportError_ as e:
@@ -596,13 +596,10 @@ def delete_youtube_cookies():
     return importer.remove_cookies()
 
 
-@app.get("/api/translate/models")
-def translate_models():
-    """Ollama models for the import page's picker; the default from data/translate.json comes first."""
-    s = translate.load_settings()
-    models = translate.installed_models(s)
-    return {"default": s["model"], "enabled": s["enabled"], "ollamaRunning": bool(models),
-            "models": [s["model"]] + [m for m in models if m != s["model"]]}
+@app.get("/api/translate/ready")
+def translate_ready():
+    """Whether English can be filled in. No model name: the editor does not offer a choice."""
+    return {"ready": translate.translation_ready()}
 
 
 @app.get("/api/import")

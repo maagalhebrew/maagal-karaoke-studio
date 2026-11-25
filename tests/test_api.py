@@ -37,6 +37,44 @@ def client(tmp_path, monkeypatch):
     return TestClient(api.app)
 
 
+def test_translate_ready_does_not_name_a_model(client, monkeypatch):
+    monkeypatch.setattr(api.translate, "translation_ready", lambda: False)
+    assert client.get("/api/translate/ready").json() == {"ready": False}
+    assert client.get("/api/translate/models").status_code == 404
+
+
+def test_desktop_song_loads_and_saves(client):
+    """A song the desktop app saved (credit, pronunciation, original recording only) opens and saves."""
+    song = copy.deepcopy(SONG)
+    song["song"]["audio"] = {"original": "audio/original.wav"}
+    song["song"]["availableTracks"] = ["original"]
+    song["song"]["recordingCredit"] = {
+        "title": "Demo", "artist": "A", "source": "https://example.com", "license": "CC0",
+        "licenseUrl": "https://example.com/license", "changes": "none"}
+    song["lines"][0]["pronunciation"] = "sha-LOM"
+    folder = paths.SONGS / "demo"
+    (folder / "song.json").write_text(json.dumps(song, ensure_ascii=False), encoding="utf-8")
+    (folder / "audio" / "vocals.wav").unlink()
+    (folder / "audio" / "instrumental.wav").unlink()
+
+    got = client.get("/api/songs/demo").json()
+    assert got["song"]["recordingCredit"] == song["song"]["recordingCredit"]
+    assert got["song"]["availableTracks"] == ["original"]
+    assert got["song"]["audio"] == {"original": "audio/original.wav"}
+    assert got["lines"][0]["pronunciation"] == "sha-LOM"
+    assert client.get("/api/songs/demo/peaks?track=vocals").status_code == 404
+    assert client.get("/api/songs/demo/peaks?track=original").status_code == 200
+
+    got["lines"][0]["english"] = "hello"
+    assert client.put("/api/songs/demo", json=got).status_code == 200
+    saved = client.get("/api/songs/demo").json()
+    assert saved["lines"][0]["english"] == "hello"
+    assert saved["lines"][0]["pronunciation"] == "sha-LOM"
+    assert saved["song"]["recordingCredit"] == song["song"]["recordingCredit"]
+    assert saved["song"]["availableTracks"] == ["original"]
+    assert set(saved["song"]["audio"]) == {"original"}
+
+
 def test_list_and_get(client):
     [row] = client.get("/api/songs").json()
     assert {k: row[k] for k in ("id", "title", "durationMs", "words", "flaggedWords", "permission", "favorite", "folders")} == {

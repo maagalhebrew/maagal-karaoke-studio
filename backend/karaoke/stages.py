@@ -225,7 +225,7 @@ def translate_stage(song: Song) -> dict:
     if not todo:
         return {"translated": 0, "alreadyHadEnglish": len(song.lines)}
     if not settings["enabled"]:
-        return {"translated": 0, "skipped": "turned off in data/translate.json"}
+        return {"translated": 0, "skipped": "English translation is turned off."}
     try:
         english = translate.translate_lines([" ".join(w["plain"] for w in line["words"]) for line in todo], settings,
                                             song.language)
@@ -236,7 +236,7 @@ def translate_stage(song: Song) -> dict:
     details = {"model": settings["model"], "translated": sum(1 for en in english if en),
                "alreadyHadEnglish": len(song.lines) - len(todo)}
     if missing := sum(1 for en in english if not en):
-        details["skipped"] = f"{missing} line(s) left without English (the model's answer didn't match)"
+        details["skipped"] = f"{missing} line(s) left without English"
     return details
 
 

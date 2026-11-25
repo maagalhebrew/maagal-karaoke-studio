@@ -89,8 +89,9 @@ export function Player({ song, mode, showNiqqud, loopPauseMs, loopFade, jumpSec,
 
   /** Switch track keeping the playhead (a new src resets playbackRate, so it is re-applied). */
   const loadTrack = async (t: Track, signal?: AbortSignal) => {
-    const url = api.audioUrl(song.song.id, t)
-    setTrackState(t)
+    const chosen = song.song.audio[t] ? t : 'original'
+    const url = api.audioUrl(song.song.id, chosen)
+    setTrackState(chosen)
     if (audio.src.endsWith(url)) return
     const at = audio.currentTime, wasPlaying = !audio.paused, rate = audio.playbackRate
     audio.src = url
@@ -236,7 +237,7 @@ export function Player({ song, mode, showNiqqud, loopPauseMs, loopFade, jumpSec,
       if (key === 'k') { e.preventDefault(); if (audio.paused) audio.play(); else audio.pause() }
       else if (key === 'j' || key === 'l') seek(jumpTarget(lines, t, key === 'l', jumpSec, song.song.durationMs))
       else if (key === 'u' || key === 'n') setSpeed(stepSpeed(speed, key === 'n'))
-      else if (key === 'v') loadTrack(track === 'original' ? 'instrumental' : 'original')
+      else if (key === 'v' && song.song.audio.instrumental) loadTrack(track === 'original' ? 'instrumental' : 'original')
       else if (['1', '2', '3'].includes(key)) { // rate the line: 1 don't know · 2 shaky · 3 know it (again: clear)
         const lineId = lineToRate(lines, loop?.id, i)
         if (!lineId) return
@@ -277,7 +278,7 @@ export function Player({ song, mode, showNiqqud, loopPauseMs, loopFade, jumpSec,
         <strong>{mode.kind === 'drill' ? mode.drill.name : 'Practice'}</strong>
         <span data-testid="player-status">{hud}</span>
         <span className="keys">{mode.kind === 'practice'
-          ? <><span className="keys-all">J back · K/Space play · L forward{jumpSec ? ` (${jumpSec} s)` : ' (line)'} · I loop line · O loop section · U slower · N faster · V original/instrumental · 1/2/3 rate the line · Esc exit</span><span className="keys-hint">Hold ? for the keys</span></>
+          ? <><span className="keys-all">J back · K/Space play · L forward{jumpSec ? ` (${jumpSec} s)` : ' (line)'} · I loop line · O loop section · U slower · N faster{song.song.audio.instrumental ? ' · V original/instrumental' : ''} · 1/2/3 rate the line · Esc exit</span><span className="keys-hint">Hold ? for the keys</span></>
           : 'Esc stop'}</span>
         <button onClick={onClose}>Close</button>
       </header>

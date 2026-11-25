@@ -2,7 +2,7 @@
 import { useState, type CSSProperties } from 'react'
 import { clipRange } from '../captions/timing'
 import { Icon } from '../icons'
-import type { Clip, ClipStep, Drill, DrillStep, Section, SectionKind, Song, Tier, Track } from '../types'
+import { tracksIn, type Clip, ClipStep, Drill, DrillStep, Section, SectionKind, Song, Tier, Track } from '../types'
 import { SECTION_PALETTE, sectionColor } from './Timeline'
 import { SECTION_KINDS, drillsUsing, nextId, sectionLineCount, sectionRange } from './structure'
 
@@ -132,7 +132,6 @@ export function ClipsPanel({ song, edit, onPlay }: { song: Song; edit: Edit; onP
 
 const TIERS: Tier[] = ['lyrics', 'en']
 const TIER_LABELS: Record<Tier, string> = { lyrics: 'lyrics', en: 'English' }
-const TRACKS: Track[] = ['original', 'instrumental', 'vocals']
 const SPEEDS = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1]
 
 export function DrillsPanel({ song, edit, onPlay }: { song: Song; edit: Edit; onPlay: (d: Drill) => void }) {
@@ -201,7 +200,7 @@ function ClipStepFields({ song, step, onChange }: { song: Song; step: ClipStep; 
         {SPEEDS.map((v) => <option key={v} value={v}>{Math.round(v * 100)}%</option>)}
       </select>
       <select value={step.track} aria-label="Track" onChange={(e) => onChange({ track: e.target.value as Track })}>
-        {TRACKS.map((t) => <option key={t}>{t}</option>)}
+        {tracksIn(song).map((t) => <option key={t}>{t}</option>)}
       </select>
       <span className="tiers" role="group" aria-label="Tiers shown">
         {TIERS.map((t) => (

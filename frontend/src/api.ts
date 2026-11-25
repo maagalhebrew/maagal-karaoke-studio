@@ -64,14 +64,14 @@ export const api = {
     call<Breakdown>(`/api/songs/${id}/breakdown`, { method: 'POST', body: JSON.stringify({ lineId, refresh }) }),
   checkLyrics: (lyrics: string, language: Language, englishLines: EnglishLines) =>
     call<LyricsCheck>('/api/import/check', { method: 'POST', body: JSON.stringify({ lyrics, language, englishLines: englishLinesBody(englishLines) }) }),
-  translateModels: () => call<{ default: string; enabled: boolean; ollamaRunning: boolean; models: string[] }>('/api/translate/models'),
+  translateReady: () => call<{ ready: boolean }>('/api/translate/ready'),
   uploadAudio: (blob: Blob, name: string) =>
     call<UploadAnalysis & { upload: string }>(`/api/import/audio?name=${encodeURIComponent(name)}`,
       { method: 'POST', body: blob, headers: { 'Content-Type': 'application/octet-stream' } }),
   uploadUrl: (upload: string) => `/api/import/audio/${upload}`,
   trimAudio: (upload: string, startMs: number, endMs: number) =>
     call<{ upload: string; seconds: number }>(`/api/import/audio/${upload}/trim`, { method: 'POST', body: JSON.stringify({ startMs, endMs }) }),
-  startImport: (body: { url: string; lyrics: string; title: string; artist: string; model: string; upload?: string;
+  startImport: (body: { url: string; lyrics: string; title: string; artist: string; upload?: string;
                         language: Language; englishLines: boolean | 'auto' }) =>
     call<ImportJob>('/api/import', { method: 'POST', body: JSON.stringify(body) }),
   importStatus: () => call<ImportJob | null>('/api/import'),

@@ -25,7 +25,7 @@ interface Props {
 
 /** Why a word is flagged, in plain words (the chips in the Flags list use the short names). */
 const FLAG_HELP: Record<string, string> = {
-  'low-confidence': "The timing model wasn't sure when this word is sung. Play it and drag its edges if it's off.",
+  'low-confidence': "The timing for this word is unsure. Play it and drag its edges if it's off.",
   'timing-adjusted': 'Its timing was moved automatically to fit between its neighbours. Play it to check.',
   'long-gap': 'There is a long pause before this word. Check it really starts that late.',
 }
@@ -66,7 +66,7 @@ export function WordInspector({ word, lineNumber, wordNumber, edge, onEdge, onTi
 
       <div className="insp-cards">
         <div className="insp-card" role="group" aria-label="Timing">
-          <h4>Timing <span className={`insp-sure${sure < 50 ? ' low' : ''}`} title="How sure the timing model is about this word">{sure}% sure</span></h4>
+          <h4>Timing <span className={`insp-sure${sure < 50 ? ' low' : ''}`} title="How sure the word timing is">{sure}% sure</span></h4>
           <div className="insp-times">
             <label>Starts (ms)
               <input type="number" step={10} value={word.startMs} onChange={(e) => onTimes(+e.target.value, word.endMs)} />
@@ -88,7 +88,7 @@ export function WordInspector({ word, lineNumber, wordNumber, edge, onEdge, onTi
       </div>
 
       <details className="insp-more">
-        <summary>Spelling <span>add or remove vowel points, punctuation or capitals</span></summary>
+        <summary>Spelling <span>punctuation or capitals; the letters stay the same</span></summary>
         <div className="insp-field">
           <label className="insp-label" htmlFor="insp-spelling">The word as shown (same letters)</label>
           <div className="insp-inline">
@@ -115,7 +115,7 @@ export function WordInspector({ word, lineNumber, wordNumber, edge, onEdge, onTi
         {adding && (
           <form className="insp-inline" onSubmit={(e) => { e.preventDefault(); if (newWord.trim()) run(() => onInsert(adding, newWord)) }}>
             <input autoFocus dir={rtl ? 'rtl' : 'ltr'} value={newWord} aria-label={`New word ${adding} this one`}
-                   placeholder={rtl ? 'type the Hebrew word (vowel points optional)' : 'type the word'} onChange={(e) => setNewWord(e.target.value)} />
+                   placeholder="type the word" onChange={(e) => setNewWord(e.target.value)} />
             <button type="submit" className="primary" disabled={!newWord.trim()}>Add {adding}</button>
             <button type="button" className="ghost" onClick={() => setAdding(null)}>Cancel</button>
           </form>

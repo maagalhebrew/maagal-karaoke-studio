@@ -69,7 +69,7 @@ def test_answer_that_swallowed_other_lines_is_retried_then_left_empty(calls):
 def test_nothing_usable_is_reported_and_model_still_unloaded(calls):
     fake, sent = calls
     fake.replies = [{"message": {"content": "not json"}}] * 2
-    with pytest.raises(translate.TranslateError, match="no usable English"):
+    with pytest.raises(translate.TranslateError, match="usable form"):
         translate.translate_lines(["שלום"])
     assert sent[-1]["keep_alive"] == 0
 
@@ -101,4 +101,13 @@ def test_stage_never_fails_the_song(calls, monkeypatch):
 
 def test_can_be_turned_off(calls, tmp_path):
     (tmp_path / "translate.json").write_text('{"enabled": false}', encoding="utf-8")
-    assert stages.translate_stage(song_with([("שלום", "")]))["skipped"] == "turned off in data/translate.json"
+    assert stages.translate_stage(song_with([("שלום", "")]))["skipped"] == "English translation is turned off."
+
+
+def test_ready_is_whether_the_configured_model_is_installed(monkeypatch):
+    monkeypatch.setattr(translate, "installed_models", lambda settings=None: ["gemma4:12b"])
+    assert translate.translation_ready() is True
+    monkeypatch.setattr(translate, "installed_models", lambda settings=None: ["something-else:1b"])
+    assert translate.translation_ready() is False
+    monkeypatch.setattr(translate, "installed_models", lambda settings=None: [])
+    assert translate.translation_ready() is False

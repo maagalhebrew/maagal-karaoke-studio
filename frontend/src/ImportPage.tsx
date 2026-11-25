@@ -11,13 +11,9 @@ const STEP_LABELS: Record<string, string> = {
   upload: 'Audio received',
   ingest: 'Read audio and lyrics',
   separate: 'Separate the vocals',
-  translate: 'English translation (local model)',
+  translate: 'English translation',
   align: 'Time the words to the singing',
   assemble: 'Save the song',
-}
-const MODEL_LABELS: Record<string, string> = {
-  'gemma4:12b': 'Gemma 4 12B (most accurate, ~5 s a line)',
-  dictalm: 'DictaLM 3.0 1.7B (fast, less accurate)',
 }
 type Source = 'record' | 'file'
 const SOURCES: [Source, string][] = [['record', 'Record computer sound'], ['file', 'Audio file']]
@@ -67,15 +63,12 @@ export function ImportPage() {
   const [check, setCheck] = useState<LyricsCheck | null>(null)
   const [job, setJob] = useState<ImportJob | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [models, setModels] = useState<{ list: string[]; running: boolean; enabled: boolean } | null>(null)
-  const [model, setModel] = useState('')
+  const [translateReady, setTranslateReady] = useState<boolean | null>(null)
   const timer = useRef<number | undefined>(undefined)
 
   // A running (or failed) import survives leaving the page: show it on return. A finished one is in the song list.
   useEffect(() => { api.importStatus().then((j) => j && j.state !== 'done' && setJob(j), () => {}) }, [])
-  useEffect(() => {
-    api.translateModels().then((m) => { setModels({ list: m.models, running: m.ollamaRunning, enabled: m.enabled }); setModel(m.default) }, () => {})
-  }, [])
+  useEffect(() => { api.translateReady().then((r) => setTranslateReady(r.ready), () => setTranslateReady(false)) }, [])
 
   useEffect(() => {
     window.clearTimeout(timer.current)
@@ -95,7 +88,7 @@ export function ImportPage() {
     setError(null)
     const upload = audio?.upload
     try {
-      setJob(await api.startImport({ url: '', lyrics, title, artist, model, upload, language, englishLines: englishLinesBody(englishLines) }))
+      setJob(await api.startImport({ url: '', lyrics, title, artist, upload, language, englishLines: englishLinesBody(englishLines) }))
       if (upload) setAudio(null) // the server has taken the file for this song
     } catch (e) { setError((e as Error).message) }
   }
@@ -108,6 +101,7 @@ export function ImportPage() {
   const running = job?.state === 'running'
   const haveAudio = audio
   const ready = haveAudio && check && !check.problems.length && !running
+  const needsEnglish = !!check && !check.problems.length && check.withEnglish < check.lines
   // Why the button can't be pressed yet, in the page's own words.
   const missing = running ? '' : [
     !haveAudio && (staged ? 'the trim step finished' : source === 'record' ? 'a recording' : 'an audio file'),
@@ -218,13 +212,8 @@ export function ImportPage() {
             )}
           </p>
         )}
-        {models?.enabled && check && check.withEnglish < check.lines && (
-          <label className="import-model">English by
-            <select value={model} onChange={(e) => setModel(e.target.value)}>
-              {models.list.map((m) => <option key={m} value={m}>{MODEL_LABELS[m] ?? (m.includes('DictaLM') ? MODEL_LABELS.dictalm : m)}</option>)}
-            </select>
-            {!models.running && <span className="error"> Ollama isn't running: start it from the Start menu, or the English will be left empty.</span>}
-          </label>
+        {needsEnglish && translateReady === false && (
+          <p className="error" role="alert">English translation isn't available. Start Ollama on this computer, or paste the English under each lyric line.</p>
         )}
         {error && <p className="error" role="alert">{error}</p>}
         <p>

@@ -38,7 +38,7 @@ export function BreakdownPanel({ songId, line, nextLineId, lineNumber, wordId, s
     <div className="panel breakdown" data-testid="breakdown">
       <h2>Line {lineNumber}</h2>
       <p className="bd-line" dir="rtl" lang="he">{line.words.map((w) => wordText(w, showNiqqud)).join(' ')}</p>
-      {state.kind === 'loading' && <p className="hint">Breaking it down… about half a minute for a new line (up to a minute for the first, while the model loads). Lines already done open instantly.</p>}
+      {state.kind === 'loading' && <p className="hint">Breaking it down… about half a minute for a new line (up to a minute the first time). Lines already done open instantly.</p>}
       {state.kind === 'error' && <p className="error">{state.message}</p>}
       {state.kind === 'ok' && (
         <>
@@ -64,7 +64,7 @@ export function BreakdownPanel({ songId, line, nextLineId, lineNumber, wordId, s
               )
             })}
           </ol>
-          <p className="hint">Made by {state.data.model} on this computer. <button className="ghost" onClick={() => setRefresh((n) => n + 1)}>Redo</button></p>
+          <p className="hint">Made on this computer. <button className="ghost" onClick={() => setRefresh((n) => n + 1)}>Redo</button></p>
         </>
       )}
     </div>

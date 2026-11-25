@@ -1,5 +1,5 @@
 {
-  "_note": "English for lines without it, from a local Ollama model (lyrics stay on this machine). Tests 31 Oct 2026, one line per request, direct + uncensored instructions: Gemma 4 12B Hatikvah 8/8, swearing kept 4/4, ~5 s per line (partly on the CPU: 7.7 GB > 6 GB VRAM). DictaLM 3.0 1.7B fast (<1 s per line) but invents words and sometimes softens; Gemma 4 E4B literal and clumsy; Qwen3.5 4B mistranslates and censors. Any installed Ollama model can be picked on the Add a song page.",
+  "_note": "English for lines without it, from Ollama on this computer (lyrics stay here). The app always uses gemma4:12b and does not offer a choice. KARAOKE_TRANSLATE_MODEL can override the name for a developer running the server; it is not shown in the editor.",
   "enabled": true,
   "model": "gemma4:12b"
 }
