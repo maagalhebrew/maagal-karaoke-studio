@@ -185,12 +185,19 @@ def separate(song: Song) -> dict:
     # --shifts 0: no random time shift, so the same song always gives the same stems. With the default random
     # shift, separation (and so alignment) varied run to run: median word confidence 0.74 / 0.49 / 0.74 on Hatikvah.
     base = [sys.executable, "-m", "demucs", "--two-stems", "vocals", "-n", "htdemucs", "--shifts", "0", "-o", str(tmp)]
-    device = "cuda"
+    import torch
+    device = "cpu"
+    if torch.cuda.is_available():
+        device = "cuda"
+    elif torch.backends.mps.is_available():
+        device = "mps"
     try:
-        _run(base + ["-d", "cuda", str(original)], "separate", "Demucs (GPU)")
+        _run(base + ["-d", device, str(original)], "separate", "Separating the recording")
     except StageError:
+        if device == "cpu":
+            raise
         device = "cpu"  # rule 4 fallback
-        _run(base + ["-d", "cpu", str(original)], "separate", "Demucs (CPU fallback)")
+        _run(base + ["-d", device, str(original)], "separate", "Separating the recording on CPU")
     out = tmp / "htdemucs" / original.stem
     for src, dst in (("vocals.wav", "vocals.wav"), ("no_vocals.wav", "instrumental.wav")):
         if not (out / src).exists():

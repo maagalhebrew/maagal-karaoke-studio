@@ -17,16 +17,12 @@ FIELDS = ("artist", "contact_name", "contact_channel", "contact_handle", "asked_
 WAITING = ("Asked", "Follow-up due")  # statuses that are waiting on a reply
 
 # The permission request, one per song language. {name}: the contact (or artist); {song}: the song title.
-# Fill in your own name and phone number before using them.
-DRAFT = ("שלום {name}, קוראים לי [השם שלך]. אני לומד עברית דרך שירים, והשיר {song} הוא אחד האהובים עליי. "
-         "אני בונה ערוץ יוטיוב ללימוד עברית בשם מעגל, ואשמח לבקש אישור להשתמש בקטעים קצרים מהשיר בסרטון שמלמד את המילים "
-         "וההגייה, עם קרדיט מלא וקישור לשיר המקורי. תודה רבה! [השם שלך], [טלפון]")
+DRAFT = ("שלום {name}, אשמח לקבל אישור להשתמש בקטעים קצרים מהשיר ״{song}״ בשיעור ללימוד השפה. "
+         "בשיעור יופיעו קרדיט מלא וקישור לשיר המקורי. תודה רבה!")
 
 
-DRAFT_ES = ("Hola {name}: me llamo [tu nombre]. Aprendo idiomas con canciones, y {song} es una de mis "
-            "favoritas. Estoy creando Maagal, un canal de YouTube para aprender idiomas con canciones, y me gustaría pedirte "
-            "permiso para usar fragmentos cortos de la canción en un video que enseña la letra y la pronunciación, con el "
-            "crédito completo y un enlace a la canción original. ¡Muchas gracias! [tu nombre], [teléfono]")
+DRAFT_ES = ("Hola {name}: me gustaría pedirte permiso para usar fragmentos cortos de «{song}» "
+            "en una lección de idiomas. Incluiré los créditos y un enlace a la canción original. ¡Muchas gracias!")
 
 
 def draft(record: dict, song_title: str, language: str = "he") -> str:

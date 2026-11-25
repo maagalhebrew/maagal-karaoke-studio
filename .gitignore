@@ -28,6 +28,11 @@ hub/
 node_modules/
 dist/
 out/
+.build/
+.pytest_cache/
+.playwright-cli/
+.playwright-mcp/
+release/
 
 # OS / editor
 Thumbs.db

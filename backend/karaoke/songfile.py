@@ -1,5 +1,7 @@
 """song.json: reading (older versions are upgraded on the way in), schema validation, and saving with numbered backups."""
 import json
+import shutil
+import tempfile
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
@@ -69,13 +71,19 @@ def save(folder: Path, song: dict) -> Path:
     if errors:
         raise ValueError(f"song.json failed schema validation ({len(errors)} errors), first: {errors[0]}")
     path = folder / "song.json"
-    if path.exists():
-        backups = folder / "backups"
-        backups.mkdir(exist_ok=True)
-        n = 1 + max((int(p.stem.split(".")[1]) for p in backups.glob("song.*.json")
-                     if p.stem.split(".")[1].isdigit()), default=0)
-        path.replace(backups / f"song.{n}.json")
-    tmp = path.with_suffix(".json.tmp")
-    tmp.write_text(json.dumps(song, ensure_ascii=False, indent=2), encoding="utf-8")
-    tmp.replace(path)
+    # Write the new file first. The previous song.json stays in place until the new text is on disk,
+    # then a copy is kept in backups. A failed write does not move the live file out of the way.
+    with tempfile.NamedTemporaryFile(dir=folder, suffix=".tmp", delete=False) as tmp:
+        pending = Path(tmp.name)
+    try:
+        pending.write_text(json.dumps(song, ensure_ascii=False, indent=2), encoding="utf-8")
+        if path.exists():
+            backups = folder / "backups"
+            backups.mkdir(exist_ok=True)
+            n = 1 + max((int(p.stem.split(".")[1]) for p in backups.glob("song.*.json")
+                         if p.stem.split(".")[1].isdigit()), default=0)
+            shutil.copyfile(path, backups / f"song.{n}.json")
+        pending.replace(path)
+    finally:
+        pending.unlink(missing_ok=True)
     return path

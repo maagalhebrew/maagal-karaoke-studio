@@ -13,7 +13,7 @@ import threading
 import time
 import uuid
 from datetime import datetime
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from urllib.parse import urlparse
 
 import numpy as np
@@ -102,7 +102,7 @@ def new_upload(name: str) -> Path:
     if ext not in AUDIO_TYPES | CONVERT_TYPES:
         kinds = ", ".join(sorted(t[1:].upper() for t in AUDIO_TYPES | CONVERT_TYPES))
         raise ImportError_(f"That file type can't be used. Audio files work: {kinds}.")
-    paths.INBOX.mkdir(exist_ok=True)
+    paths.INBOX.mkdir(parents=True, exist_ok=True)
     for old in paths.INBOX.glob("upload-*.*"):
         if time.time() - old.stat().st_mtime > UPLOAD_KEEP_S:
             old.unlink(missing_ok=True)
@@ -270,6 +270,9 @@ def _fresh_env() -> dict:
 
 def _unique_slug(title: str) -> str:
     base = slugify(title) if title and re.search(r"[A-Za-z0-9]", title) else "song-" + datetime.now().strftime("%Y%m%d-%H%M")
+    base = base[:72].rstrip("-") or "song"
+    if PureWindowsPath(base).is_reserved():
+        base = "song-" + base
     slug, n = base, 2
     while (paths.SONGS / slug).exists() or any(paths.INBOX.glob(f"{slug}.*")):
         slug, n = f"{base}-{n}", n + 1
@@ -344,7 +347,7 @@ def _download(slug: str, url: str, env: dict) -> tuple[Path | None, str]:
     # title printed before download, file path after it is moved into place
     _set("download", "running")
     t0 = time.perf_counter()
-    paths.INBOX.mkdir(exist_ok=True)
+    paths.INBOX.mkdir(parents=True, exist_ok=True)
     cookies = ["--cookies", str(paths.YT_COOKIES)] if paths.YT_COOKIES.exists() else []
     p = subprocess.run(
         # No conversion: YouTube's own stream is kept as it is (WebM/Opus or M4A/AAC), so it isn't compressed twice.

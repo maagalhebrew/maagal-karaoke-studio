@@ -99,6 +99,8 @@ def _reference_errors(song: dict) -> list[str]:
     errors = []
     line_idx = {line["id"]: i for i, line in enumerate(song["lines"])}
     word_idx = {w["id"]: i for i, w in enumerate(_words(song))}
+    if len(line_idx) != len(song["lines"]) or len(word_idx) != sum(len(line["words"]) for line in song["lines"]):
+        errors.append("Lines and words must have unique identifiers.")
     prev_to = -1
     for s in song["sections"]:
         a, b = line_idx.get(s["fromLine"]), line_idx.get(s["toLine"])
@@ -122,6 +124,8 @@ def _reference_errors(song: dict) -> list[str]:
         for n, step in enumerate(d["steps"], 1):
             if step["type"] == "clip" and step["clip"] not in clip_ids:
                 errors.append(f"drill {d['id']} step {n} uses missing clip {step['clip']}")
+            if step["type"] == "clip" and step["track"] not in song["song"]["audio"]:
+                errors.append(f"drill {d['id']} step {n} needs an unavailable audio track")
     return errors
 
 

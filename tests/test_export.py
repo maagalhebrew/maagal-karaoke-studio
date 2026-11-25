@@ -57,6 +57,16 @@ def test_ass_has_two_styles_and_word_karaoke_on_the_lyrics():
     assert lyrics.endswith("{\\k30}{\\kf60}שָׁלוֹם {\\k10}{\\kf60}שָׁלוֹם‏")
 
 
+def test_ass_escapes_braces_and_backslashes():
+    song = json.loads(json.dumps(SONG))
+    song["lines"][0]["words"][0] = w("L1W1", 1000, 1600, "a{b}\\c")
+    song["lines"][0]["english"] = "hello {there}"
+    text = subtitles.ass(song, STYLE, 0, 10_000)
+    assert subtitles.ass_text("a{b}\\c") in text
+    assert subtitles.ass_text("hello {there}") in text
+    assert "{\\kf60}a{b}" not in text
+
+
 def test_left_to_right_lyrics_get_no_direction_marks():
     spanish = {**SONG, "song": {**SONG["song"], "language": "es"},
                "lines": [{"id": "L1", "english": "", "words": [w("L1W1", 1000, 1600, "Hola")]}]}

@@ -54,12 +54,13 @@ Check everything is in place (GPU, models, Git):
 
 ## Use it
 
-```powershell
-.\start-studio.ps1
-```
+Double-click `start-local.bat` (or run `start-local.ps1`) in the clone. The first run creates `.venv`,
+installs the Python libraries, builds the editor if `frontend\dist` is missing, starts the local server and
+opens http://127.0.0.1:8321. Exact steps, the models it expects, and where your songs live are in
+[RUN-LOCALLY.md](RUN-LOCALLY.md).
 
-This starts the studio and opens http://127.0.0.1:8321 in your browser. Keep the window it opens; closing it
-stops the studio. Then:
+If the environment is already set up, `start-studio.ps1` only starts the server and opens the browser.
+Keep that window open; closing it stops the studio. Then:
 
 1. **Add a song**: record the computer's sound while the song plays, or pick an audio file.
 2. Choose **Hebrew** or **Spanish** and paste the lyrics: one sung line per line, repeats written out, a blank
@@ -67,11 +68,13 @@ stops the studio. Then:
 3. About 5 minutes later the **Studio editor** opens. Play it, fix any word timing that's off (double-click a
    word), make sections, clips and drills, and practise.
 
-Your songs live in `songs\` and uploads in `inbox\`. Both stay on your computer and are never added to Git.
+Your songs live in `songs\` inside this clone, and uploads in `inbox\`. The library database is
+`data\karaoke.db`. All three stay on your computer and are not added to Git. Do not put the clone in
+Documents or Desktop if those folders sync to Google Drive.
 
 ## Good to know
 
-- The permission-request drafts (asking an artist for permission to use excerpts) have placeholders for
-  your name and phone number: edit them in `backend\karaoke\permissions.py`.
+- The permission-request draft is a short Hebrew or Spanish note filled in with the contact and the song title.
+  The wording is in `backend\karaoke\permissions.py`.
 - Tests: `.venv\Scripts\python.exe -m pytest tests -k "not full_pipeline"`
 - `CLAUDE.md` is the project spec and working notes. `docs\build-plan.md` is the plan for what comes next.

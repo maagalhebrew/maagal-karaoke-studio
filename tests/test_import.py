@@ -41,6 +41,12 @@ def test_folder_name_from_title_is_unique(client):
     assert importer._unique_slug("שיר").startswith("song-")  # Hebrew-only title: dated name
 
 
+def test_folder_name_avoids_windows_reserved_names_and_stays_short(client):
+    reserved = importer._unique_slug("CON")
+    assert reserved == "song-con"
+    assert len(importer._unique_slug("A" * 200)) <= 72
+
+
 # --- YouTube sign-in cookies (fake file; real ones are the user's) --------------------------------------
 FAKE_COOKIES = "# Netscape HTTP Cookie File\n.youtube.com\tTRUE\t/\tTRUE\t0\tFAKE\tnot-a-real-value\n"
 
